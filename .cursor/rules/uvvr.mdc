@@ -1,0 +1,8 @@
+---
+description: Design executable evals for AI outcomes that are open-ended or only partly verifiable
+alwaysApply: false
+---
+
+When this rule applies, read `skills/uvvr/SKILL.md` completely and follow it as
+the source of truth. Resolve its referenced assets and references relative to
+`skills/uvvr/`. Do not duplicate or reinterpret the UVVR workflow in this rule.
