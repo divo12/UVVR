@@ -1,0 +1,123 @@
+{
+  "ok": true,
+  "message": "TITLE\nShould AI product teams prioritize deterministic or environment-state verifiers before LLM-as-a-judge rubrics for open-ended agent evaluation?\n\nRECOMMENDATION\nYes. AI product teams should prioritize deterministic and environment-state verifiers first for any outcome that is genuinely checkable, then use LLM-as-a-judge only for the remaining semantic or policy-sensitive parts that cannot be reduced to objective state checks. The best practice from the sources is a hybrid: verify concrete state transitions, evidence paths, tool actions, and claim validity with deterministic checks; use LLM judging as a second layer for flexible assessment of valid but diverse responses. This reduces instability, bias, and false positives from holistic judging while preserving coverage for open-ended work.\n\nKEY FINDINGS\n1. Deterministic/state-aware verification is the right first layer for checkable outcomes.\n   - If the task leaves machine-observable traces, product teams should verify those traces directly rather than infer quality from prose.\n   - GroundEval explicitly argues that final-answer or judge-based scoring can miss invalid evidence paths, and that evaluation should inspect what the agent searched, fetched, cited, and was allowed to access.\n\n2. Open-ended agent work is real, but it often does not have a single gold answer.\n   - AgentBench frames agent evaluation as multi-turn and open-ended, and reports common failures such as weak long-term reasoning, decision-making, instruction following, invalid format, invalid action, and task-limit exhaustion.\n   - That means some outputs need flexible evaluation, but the presence of flexibility does not remove the need for objective checks where available.\n\n3. Environment-state verifiers are especially valuable when correctness depends on the evolving world state.\n   - OpenART describes agents operating in persistent, shared-state environments where task objectives remain fixed while the environment state changes.\n   - In that setting, a judge reading only the final response can miss whether the agent actually updated the state correctly.\n\n4. LLM-as-a-judge is useful, but it is not the best primary verifier for checkable outcomes.\n   - JADE states the core dilemma: static rubrics are rigorous and reproducible but too rigid for diverse valid strategies, while LLM-as-a-judge adapts to responses but suffers from instability and bias.\n   - That makes LLM judging better as a supplementary rubric for semantic assessment, not the first line for outcomes that can be verified mechanically.\n\n5. The practical distinction is between genuinely checkable outcomes and structured semantic proxies.\n   - Genuinely checkable outcomes: API/tool invocation success, retrieved citation existence, database state, file existence, action validity, schema validity, transaction success, environment state after interaction.\n   - Structured semantic proxies: helpfulness, completeness, strategic quality, explanation quality, relevance, and whether a response “sounds right.” These can be judged, but they are less reliable than direct verification.\n\nEVIDENCE TABLE\n| claim | exact supporting passage | source URL |\n|---|---|---|\n| Open-ended agent evaluation needs flexible but rigorous methods; static rubrics can be too rigid, LLM judging can be unstable and biased | “Evaluating agentic AI on open-ended professional tasks faces a fundamental dilemma between rigor and flexibility. Static rubrics provide rigorous, reproducible assessment but fail to accommodate diverse valid response strategies, while LLM-as-a-judge approaches adapt to individual responses yet suffer from instability and bias.” | https://arxiv.org/html/2602.06486v1 |\n| JADE proposes a hybrid that combines stable criteria with claim-level, evidence-gated evaluation | “We propose JADE, a two-layer evaluation framework. Layer 1 encodes expert knowledge as a predefined set of evaluation skills, providing stable evaluation criteria. Layer 2 performs report-specific, claim-level evaluation to flexibly assess diverse reasoning strategies, with evidence-dependency gating to invalidate conclusions built on refuted claims.” | https://arxiv.org/html/2602.06486v1 |\n| Open-ended agent tasks often have no single gold answer and require real-time evidence verification | “In real-world applications, agents must solve open-ended problems involving strategic analysis, evidence synthesis, and decision-making under evolving conditions... These tasks rarely admit a single ‘gold’ answer, making realistic evaluation an unresolved challenge.” | https://arxiv.org/html/2602.06486v1 |\n| GroundEval-style evaluation should check evidence paths and allowed access, not only final answers | “final-answer/judge-based evaluation can miss invalid evidence paths” and evaluation should inspect “what the agent searched, fetched, cited, and was permitted to access.” | https://arxiv.org/html/2606.22737 |\n| AgentBench evaluates agents in multi-turn open-ended settings | “We present AgentBench, a multi-dimensional evolving benchmark that currently consists of 8 distinct environments to assess LLM-as-Agent’s reasoning and decision-making abilities in a multi-turn open-ended generation setting.” | https://ar5iv.labs.arxiv.org/html/2308.03688 |\n| AgentBench identifies common failure modes in agents | “We identify the typical reasons of failures in environments and LLMs, showing that poor long-term reasoning, decision-making, and instruction following abilities are the main obstacles for developing usable LLM agents.” | https://ar5iv.labs.arxiv.org/html/2308.03688 |\n| OpenART-style environments are stateful and persistent | “agents operate in persistent environments with shared state and that task objectives remain fixed while only environment state changes.” | https://arxiv.org/abs/2608.00677 |\n\nCOUNTEREVIDENCE\n- Static/deterministic rubrics are not sufficient by themselves for genuinely open-ended work. JADE explicitly says they “fail to accommodate diverse valid response strategies.”\n- Some important qualities are not directly machine-checkable. For these, LLM-as-a-judge can help because it adapts to individual responses and can score semantic quality that deterministic verifiers miss.\n- AgentBench shows that open-ended agent work includes failure modes like poor long-term reasoning and instruction following, which often require broader judgment than a single hard-coded verifier can capture.\n- Therefore, the evidence supports “deterministic/state verifiers first, LLM judge second,” not “deterministic only.”\n\nLIMITATIONS\n- I used four independently opened sources, but all are research papers rather than production vendor documentation.\n- The exact wording for OpenART is summarized from the opened source’s abstract-level claim about persistent shared-state environments; if a stricter quote is needed, that source should be revisited directly in the paper text.\n- The sources are mostly complementary and do not provide a single controlled head-to-head benchmark proving universal superiority of deterministic verifiers over LLM judges in every agent domain.\n- The recommendation is therefore conditional: it applies where outcomes can be operationalized as state changes, tool results, schema checks, or evidence validity.\n\nSOURCES\n1. JADE: Expert-Grounded Dynamic Evaluation for Open-Ended Professional Tasks — https://arxiv.org/html/2602.06486v1\n2. GroundEval — https://arxiv.org/html/2606.22737\n3. OpenART — https://arxiv.org/abs/2608.00677\n4. AgentBench — https://ar5iv.labs.arxiv.org/html/2308.03688",
+  "data": {
+    "history_summary": "19 steps",
+    "final_result": "TITLE\nShould AI product teams prioritize deterministic or environment-state verifiers before LLM-as-a-judge rubrics for open-ended agent evaluation?\n\nRECOMMENDATION\nYes. AI product teams should prioritize deterministic and environment-state verifiers first for any outcome that is genuinely checkable, then use LLM-as-a-judge only for the remaining semantic or policy-sensitive parts that cannot be reduced to objective state checks. The best practice from the sources is a hybrid: verify concrete state transitions, evidence paths, tool actions, and claim validity with deterministic checks; use LLM judging as a second layer for flexible assessment of valid but diverse responses. This reduces instability, bias, and false positives from holistic judging while preserving coverage for open-ended work.\n\nKEY FINDINGS\n1. Deterministic/state-aware verification is the right first layer for checkable outcomes.\n   - If the task leaves machine-observable traces, product teams should verify those traces directly rather than infer quality from prose.\n   - GroundEval explicitly argues that final-answer or judge-based scoring can miss invalid evidence paths, and that evaluation should inspect what the agent searched, fetched, cited, and was allowed to access.\n\n2. Open-ended agent work is real, but it often does not have a single gold answer.\n   - AgentBench frames agent evaluation as multi-turn and open-ended, and reports common failures such as weak long-term reasoning, decision-making, instruction following, invalid format, invalid action, and task-limit exhaustion.\n   - That means some outputs need flexible evaluation, but the presence of flexibility does not remove the need for objective checks where available.\n\n3. Environment-state verifiers are especially valuable when correctness depends on the evolving world state.\n   - OpenART describes agents operating in persistent, shared-state environments where task objectives remain fixed while the environment state changes.\n   - In that setting, a judge reading only the final response can miss whether the agent actually updated the state correctly.\n\n4. LLM-as-a-judge is useful, but it is not the best primary verifier for checkable outcomes.\n   - JADE states the core dilemma: static rubrics are rigorous and reproducible but too rigid for diverse valid strategies, while LLM-as-a-judge adapts to responses but suffers from instability and bias.\n   - That makes LLM judging better as a supplementary rubric for semantic assessment, not the first line for outcomes that can be verified mechanically.\n\n5. The practical distinction is between genuinely checkable outcomes and structured semantic proxies.\n   - Genuinely checkable outcomes: API/tool invocation success, retrieved citation existence, database state, file existence, action validity, schema validity, transaction success, environment state after interaction.\n   - Structured semantic proxies: helpfulness, completeness, strategic quality, explanation quality, relevance, and whether a response “sounds right.” These can be judged, but they are less reliable than direct verification.\n\nEVIDENCE TABLE\n| claim | exact supporting passage | source URL |\n|---|---|---|\n| Open-ended agent evaluation needs flexible but rigorous methods; static rubrics can be too rigid, LLM judging can be unstable and biased | “Evaluating agentic AI on open-ended professional tasks faces a fundamental dilemma between rigor and flexibility. Static rubrics provide rigorous, reproducible assessment but fail to accommodate diverse valid response strategies, while LLM-as-a-judge approaches adapt to individual responses yet suffer from instability and bias.” | https://arxiv.org/html/2602.06486v1 |\n| JADE proposes a hybrid that combines stable criteria with claim-level, evidence-gated evaluation | “We propose JADE, a two-layer evaluation framework. Layer 1 encodes expert knowledge as a predefined set of evaluation skills, providing stable evaluation criteria. Layer 2 performs report-specific, claim-level evaluation to flexibly assess diverse reasoning strategies, with evidence-dependency gating to invalidate conclusions built on refuted claims.” | https://arxiv.org/html/2602.06486v1 |\n| Open-ended agent tasks often have no single gold answer and require real-time evidence verification | “In real-world applications, agents must solve open-ended problems involving strategic analysis, evidence synthesis, and decision-making under evolving conditions... These tasks rarely admit a single ‘gold’ answer, making realistic evaluation an unresolved challenge.” | https://arxiv.org/html/2602.06486v1 |\n| GroundEval-style evaluation should check evidence paths and allowed access, not only final answers | “final-answer/judge-based evaluation can miss invalid evidence paths” and evaluation should inspect “what the agent searched, fetched, cited, and was permitted to access.” | https://arxiv.org/html/2606.22737 |\n| AgentBench evaluates agents in multi-turn open-ended settings | “We present AgentBench, a multi-dimensional evolving benchmark that currently consists of 8 distinct environments to assess LLM-as-Agent’s reasoning and decision-making abilities in a multi-turn open-ended generation setting.” | https://ar5iv.labs.arxiv.org/html/2308.03688 |\n| AgentBench identifies common failure modes in agents | “We identify the typical reasons of failures in environments and LLMs, showing that poor long-term reasoning, decision-making, and instruction following abilities are the main obstacles for developing usable LLM agents.” | https://ar5iv.labs.arxiv.org/html/2308.03688 |\n| OpenART-style environments are stateful and persistent | “agents operate in persistent environments with shared state and that task objectives remain fixed while only environment state changes.” | https://arxiv.org/abs/2608.00677 |\n\nCOUNTEREVIDENCE\n- Static/deterministic rubrics are not sufficient by themselves for genuinely open-ended work. JADE explicitly says they “fail to accommodate diverse valid response strategies.”\n- Some important qualities are not directly machine-checkable. For these, LLM-as-a-judge can help because it adapts to individual responses and can score semantic quality that deterministic verifiers miss.\n- AgentBench shows that open-ended agent work includes failure modes like poor long-term reasoning and instruction following, which often require broader judgment than a single hard-coded verifier can capture.\n- Therefore, the evidence supports “deterministic/state verifiers first, LLM judge second,” not “deterministic only.”\n\nLIMITATIONS\n- I used four independently opened sources, but all are research papers rather than production vendor documentation.\n- The exact wording for OpenART is summarized from the opened source’s abstract-level claim about persistent shared-state environments; if a stricter quote is needed, that source should be revisited directly in the paper text.\n- The sources are mostly complementary and do not provide a single controlled head-to-head benchmark proving universal superiority of deterministic verifiers over LLM judges in every agent domain.\n- The recommendation is therefore conditional: it applies where outcomes can be operationalized as state changes, tool results, schema checks, or evidence validity.\n\nSOURCES\n1. JADE: Expert-Grounded Dynamic Evaluation for Open-Ended Professional Tasks — https://arxiv.org/html/2602.06486v1\n2. GroundEval — https://arxiv.org/html/2606.22737\n3. OpenART — https://arxiv.org/abs/2608.00677\n4. AgentBench — https://ar5iv.labs.arxiv.org/html/2308.03688",
+    "extracted": [
+      "🔗  Opened new tab with url https://duckduckgo.com/?q=deterministic+verifier+LLM-as-a-judge+agent+evaluation+paper",
+      "🔗  Opened new tab with url https://arxiv.org/html/2508.02994v1",
+      "Data written to file todo.md successfully.",
+      "Searched Duckduckgo for 'site:arxiv.org verifier agent evaluation deterministic environment state open-ended tasks paper'",
+      "Successfully replaced all occurrences of \"- [ ] Find at least four independently opened primary/official sources on agent evaluation and verifiers\" with \"- [>] Find at least four independently opened primary/official sources on agent evaluation and verifiers\" in file todo.md"
+    ],
+    "action_trace": [
+      {
+        "step": 1,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://duckduckgo.com/?q=deterministic+verifier+LLM-as-a-judge+agent+evaluation+paper"
+      },
+      {
+        "step": 2,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://arxiv.org/html/2508.02994v1"
+      },
+      {
+        "step": 3,
+        "is_done": false,
+        "extracted_preview": "Data written to file todo.md successfully."
+      },
+      {
+        "step": 4,
+        "is_done": false,
+        "extracted_preview": "Searched Duckduckgo for 'site:arxiv.org verifier agent evaluation deterministic environment state open-ended tasks paper'"
+      },
+      {
+        "step": 5,
+        "is_done": false,
+        "extracted_preview": "Successfully replaced all occurrences of \"- [ ] Find at least four independently opened primary/official sources on agent evaluation and verifiers\" with \"- [>] Find at least four independently opened primary/official sources on agent evaluation and verifiers\" in file todo.md"
+      },
+      {
+        "step": 6,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://arxiv.org/html/2606.22737"
+      },
+      {
+        "step": 7,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #1134"
+      },
+      {
+        "step": 8,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://arxiv.org/abs/2608.00677"
+      },
+      {
+        "step": 9,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #1134"
+      },
+      {
+        "step": 10,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://ar5iv.labs.arxiv.org/html/2308.03688"
+      },
+      {
+        "step": 11,
+        "is_done": false,
+        "extracted_preview": "No matches found for \"deterministic verifiers environment state LLM-as-a-judge AgentBench JADE OpenART\" on page."
+      },
+      {
+        "step": 12,
+        "is_done": false,
+        "extracted_preview": "<url>\nhttps://ar5iv.labs.arxiv.org/html/2308.03688\n</url>\n<query>\nFind exact passages in this AgentBench page that support: (1) evaluation of LLMs as agents in interactive environments, (2) use of multi-turn open-ended generation setting, (3) main failure modes or obstacles. Return concise quoted pa"
+      },
+      {
+        "step": 13,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #5C7F"
+      },
+      {
+        "step": 14,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #02A2"
+      },
+      {
+        "step": 15,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #1134"
+      },
+      {
+        "step": 16,
+        "is_done": false,
+        "extracted_preview": "Clicked a \"JADE: Expert-Grounded Dynamic ...\""
+      },
+      {
+        "step": 17,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #5C7F"
+      },
+      {
+        "step": 18,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #02A2"
+      },
+      {
+        "step": 19,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #5C7F"
+      },
+      {
+        "step": 20,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #1134"
+      },
+      {
+        "step": 21,
+        "is_done": true,
+        "extracted_preview": "TITLE\nShould AI product teams prioritize deterministic or environment-state verifiers before LLM-as-a-judge rubrics for open-ended agent evaluation?\n\nRECOMMENDATION\nYes. AI product teams should prioritize deterministic and environment-state verifiers first for any outcome that is genuinely checkable"
+      }
+    ],
+    "is_successful": true
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "ok": true,
+  "message": "TITLE\nDeterministic and environment-state verifiers should come first for open-ended agent evaluation; use LLM-as-a-judge rubrics as a secondary layer for subjective or proxy judgments.\n\nRECOMMENDATION\nAI product teams evaluating open-ended agent work should prioritize deterministic and environment-state verifiers before LLM-as-a-judge rubrics whenever the outcome can be checked against ground truth, artifacts, permissions, logs, or environment state. Use LLM-as-a-judge rubrics only after those checks, mainly for structured semantic proxies that are not directly machine-verifiable (for example, style, helpfulness, completeness, or nuanced explanation quality). The reason is simple: deterministic/environment-state checks are more reliable for objective facts, less expensive, and less brittle; judge-only systems are non-deterministic and can miss access violations, cutoff leakage, skipped preconditions, or claims unsupported by artifacts.\n\nKEY FINDINGS\n1. GroundEval explicitly argues that LLM judges are insufficient on their own because they cannot tell whether an agent used forbidden access, relied on post-cutoff information, skipped required checks, or claimed evidence that is absent from artifacts.\n2. Anthropic recommends deterministic graders where possible, noting that code-based graders fit objective tasks well and that model-based graders are non-deterministic and require calibration with human experts.\n3. Anthropic also provides important counterevidence against overusing strict process checks: it says rigid step-sequence grading can be too brittle, and that teams should often grade what the agent produced rather than the exact path it took.\n4. The practical boundary is between genuinely checkable outcomes and semantic proxies: if you can verify it from state, logs, tool calls, files, permissions, or tests, do that first; if you cannot, a rubric or model judge may be useful, but only as a supplement.\n\nEVIDENCE TABLE\n| claim | exact supporting passage | source URL |\n|---|---|---|\n| Ground-truth/state verification is necessary because LLM judges miss access, cutoff, and artifact issues | “An LLM judge can tell you whether an answer looks right. What it can't tell you is whether your agent: cited a document it should never have had access to in the first place pulled in information from after the question's cutoff time skipped a precondition it was supposed to verify before calling something safe claimed evidence exists that simply isn't in the artifacts GroundEval is built to answer exactly these questions, and it does it deterministically. The ground truth here comes from actual state, artifacts, access rules, and tool traces, not from another model guessing at what looks plausible.” | https://github.com/tenurehq/GroundEval/blob/main/README.md |\n| Deterministic scoring is a core design choice for GroundEval | “Framework support” / table column “Deterministic Scoring” and “GroundEval” / “A debugging loop for AI agents. See what your agent checked, what it skipped, what evidence it actually used, and whether every action stayed inside the permissions it was supposed to have.” | https://github.com/tenurehq/GroundEval/blob/main/README.md |\n| Objective tasks are well-suited to deterministic graders | “Code-based graders” and “Deterministic graders are natural for coding agents because software is generally straightforward to evaluate: does the code run and do the tests pass?” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Anthropic recommends deterministic graders where possible | “We recommend choosing deterministic graders where possible, LLM graders where necessary or for additional flexibility, and using human graders judiciously for additional validation.” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Model-based/LLM-as-judge grading has non-determinism and calibration costs | “Model-based graders” / “Weaknesses | - Non-deterministic - More expensive than code - Requires calibration with human graders for accuracy” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Environment-state/artifact checks are a standard form of evaluation for agent outcomes | “OSWorld extends this … with evaluation scripts that inspect diverse artifacts after task completion: file system state, application configs, database contents, and UI element properties.” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Process-path checks can be too brittle | “There is a common instinct to check that agents followed very specific steps like a sequence of tool calls in the right order. We’ve found this approach too rigid and results in overly brittle tests…” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| In many cases, the right target is the outcome rather than the exact path | “So as not to unnecessarily punish creativity, it’s often better to grade what the agent produced, not the path it took.” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n\nCOUNTEREVIDENCE\n- Strict deterministic or process-verification testing can be overly brittle. Anthropic explicitly warns that checking for a specific sequence of tool calls in the right order can create “overly brittle tests,” especially when creative paths can still produce correct outcomes.\n- Not every meaningful evaluation target is directly checkable from state. Some tasks are genuinely semantic or subjective, so a rubric or LLM judge may be needed for flexibility.\n- Anthropic’s guidance implies a hybrid approach: deterministic graders first, LLM graders where necessary, and human graders for validation. That is counterevidence to any absolutist claim that only deterministic verification should be used.\n- Model-based graders can be useful, but their non-determinism means they need human calibration and should not be the primary check when a direct verifier exists.\n\nLIMITATIONS\n- I could not extract usable exact passage text from AJ-Bench’s webpage content in the browsing session, so I omitted it rather than paraphrasing a snippet.\n- I also did not include any source that was not openly retrievable and quotable in the browser session.\n- The recommendation here is grounded in the cited passages and is intentionally conservative: it favors direct verifiability over semantic approximation, but not at the cost of brittle overfitting to exact agent trajectories.\n- This is a research synthesis, not a benchmark result; the sources compare evaluation strategies conceptually rather than proving a universal ranking for every agent task.\n\nSOURCES\n1. GroundEval README, GitHub: https://github.com/tenurehq/GroundEval/blob/main/README.md\n2. Anthropic Engineering, “Demystifying evals for AI agents”: https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents\n3. GroundEval arXiv HTML paper was opened during the session, but I did not rely on it for a unique exact quote in the final table.\n4. arXiv paper on limitations of LLM-as-a-Judge was opened during the session, but I did not rely on it for a unique exact quote in the final table.\n5. AJ-Bench was opened, but no exact extractable passage was available in the browsing session, so it is not cited above.",
+  "data": {
+    "history_summary": "23 steps",
+    "final_result": "TITLE\nDeterministic and environment-state verifiers should come first for open-ended agent evaluation; use LLM-as-a-judge rubrics as a secondary layer for subjective or proxy judgments.\n\nRECOMMENDATION\nAI product teams evaluating open-ended agent work should prioritize deterministic and environment-state verifiers before LLM-as-a-judge rubrics whenever the outcome can be checked against ground truth, artifacts, permissions, logs, or environment state. Use LLM-as-a-judge rubrics only after those checks, mainly for structured semantic proxies that are not directly machine-verifiable (for example, style, helpfulness, completeness, or nuanced explanation quality). The reason is simple: deterministic/environment-state checks are more reliable for objective facts, less expensive, and less brittle; judge-only systems are non-deterministic and can miss access violations, cutoff leakage, skipped preconditions, or claims unsupported by artifacts.\n\nKEY FINDINGS\n1. GroundEval explicitly argues that LLM judges are insufficient on their own because they cannot tell whether an agent used forbidden access, relied on post-cutoff information, skipped required checks, or claimed evidence that is absent from artifacts.\n2. Anthropic recommends deterministic graders where possible, noting that code-based graders fit objective tasks well and that model-based graders are non-deterministic and require calibration with human experts.\n3. Anthropic also provides important counterevidence against overusing strict process checks: it says rigid step-sequence grading can be too brittle, and that teams should often grade what the agent produced rather than the exact path it took.\n4. The practical boundary is between genuinely checkable outcomes and semantic proxies: if you can verify it from state, logs, tool calls, files, permissions, or tests, do that first; if you cannot, a rubric or model judge may be useful, but only as a supplement.\n\nEVIDENCE TABLE\n| claim | exact supporting passage | source URL |\n|---|---|---|\n| Ground-truth/state verification is necessary because LLM judges miss access, cutoff, and artifact issues | “An LLM judge can tell you whether an answer looks right. What it can't tell you is whether your agent: cited a document it should never have had access to in the first place pulled in information from after the question's cutoff time skipped a precondition it was supposed to verify before calling something safe claimed evidence exists that simply isn't in the artifacts GroundEval is built to answer exactly these questions, and it does it deterministically. The ground truth here comes from actual state, artifacts, access rules, and tool traces, not from another model guessing at what looks plausible.” | https://github.com/tenurehq/GroundEval/blob/main/README.md |\n| Deterministic scoring is a core design choice for GroundEval | “Framework support” / table column “Deterministic Scoring” and “GroundEval” / “A debugging loop for AI agents. See what your agent checked, what it skipped, what evidence it actually used, and whether every action stayed inside the permissions it was supposed to have.” | https://github.com/tenurehq/GroundEval/blob/main/README.md |\n| Objective tasks are well-suited to deterministic graders | “Code-based graders” and “Deterministic graders are natural for coding agents because software is generally straightforward to evaluate: does the code run and do the tests pass?” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Anthropic recommends deterministic graders where possible | “We recommend choosing deterministic graders where possible, LLM graders where necessary or for additional flexibility, and using human graders judiciously for additional validation.” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Model-based/LLM-as-judge grading has non-determinism and calibration costs | “Model-based graders” / “Weaknesses | - Non-deterministic - More expensive than code - Requires calibration with human graders for accuracy” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Environment-state/artifact checks are a standard form of evaluation for agent outcomes | “OSWorld extends this … with evaluation scripts that inspect diverse artifacts after task completion: file system state, application configs, database contents, and UI element properties.” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| Process-path checks can be too brittle | “There is a common instinct to check that agents followed very specific steps like a sequence of tool calls in the right order. We’ve found this approach too rigid and results in overly brittle tests…” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n| In many cases, the right target is the outcome rather than the exact path | “So as not to unnecessarily punish creativity, it’s often better to grade what the agent produced, not the path it took.” | https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents |\n\nCOUNTEREVIDENCE\n- Strict deterministic or process-verification testing can be overly brittle. Anthropic explicitly warns that checking for a specific sequence of tool calls in the right order can create “overly brittle tests,” especially when creative paths can still produce correct outcomes.\n- Not every meaningful evaluation target is directly checkable from state. Some tasks are genuinely semantic or subjective, so a rubric or LLM judge may be needed for flexibility.\n- Anthropic’s guidance implies a hybrid approach: deterministic graders first, LLM graders where necessary, and human graders for validation. That is counterevidence to any absolutist claim that only deterministic verification should be used.\n- Model-based graders can be useful, but their non-determinism means they need human calibration and should not be the primary check when a direct verifier exists.\n\nLIMITATIONS\n- I could not extract usable exact passage text from AJ-Bench’s webpage content in the browsing session, so I omitted it rather than paraphrasing a snippet.\n- I also did not include any source that was not openly retrievable and quotable in the browser session.\n- The recommendation here is grounded in the cited passages and is intentionally conservative: it favors direct verifiability over semantic approximation, but not at the cost of brittle overfitting to exact agent trajectories.\n- This is a research synthesis, not a benchmark result; the sources compare evaluation strategies conceptually rather than proving a universal ranking for every agent task.\n\nSOURCES\n1. GroundEval README, GitHub: https://github.com/tenurehq/GroundEval/blob/main/README.md\n2. Anthropic Engineering, “Demystifying evals for AI agents”: https://www.anthropic.com/engineering/demystifying-evals-for-ai-agents\n3. GroundEval arXiv HTML paper was opened during the session, but I did not rely on it for a unique exact quote in the final table.\n4. arXiv paper on limitations of LLM-as-a-Judge was opened during the session, but I did not rely on it for a unique exact quote in the final table.\n5. AJ-Bench was opened, but no exact extractable passage was available in the browsing session, so it is not cited above.",
+    "extracted": [
+      "Data written to file todo.md successfully.",
+      "🔗  Opened new tab with url https://duckduckgo.com/?q=deterministic+environment-state+verifiers+LLM-as-a-judge+agent+evaluation",
+      "🔗  Opened new tab with url https://arxiv.org/html/2606.22737v2",
+      "Searched Duckduckgo for 'LLM-as-a-judge limitations evaluation paper official deterministic verifier agent evaluation'",
+      "Searched Duckduckgo for 'GroundEval deterministic environment state verifier arxiv paper'"
+    ],
+    "action_trace": [
+      {
+        "step": 1,
+        "is_done": false,
+        "extracted_preview": "Data written to file todo.md successfully."
+      },
+      {
+        "step": 2,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://duckduckgo.com/?q=deterministic+environment-state+verifiers+LLM-as-a-judge+agent+evaluation"
+      },
+      {
+        "step": 3,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://arxiv.org/html/2606.22737v2"
+      },
+      {
+        "step": 4,
+        "is_done": false,
+        "extracted_preview": "Searched Duckduckgo for 'LLM-as-a-judge limitations evaluation paper official deterministic verifier agent evaluation'"
+      },
+      {
+        "step": 5,
+        "is_done": false,
+        "extracted_preview": "Searched Duckduckgo for 'GroundEval deterministic environment state verifier arxiv paper'"
+      },
+      {
+        "step": 6,
+        "is_done": false,
+        "extracted_preview": "Searched Duckduckgo for 'LLM-as-a-judge evaluation limitations paper official site deterministic verifier environment-state evaluation'"
+      },
+      {
+        "step": 7,
+        "is_done": false,
+        "extracted_preview": "🔗  Opened new tab with url https://arxiv.org/abs/2410.20266"
+      },
+      {
+        "step": 8,
+        "is_done": false,
+        "extracted_preview": "Searched Duckduckgo for 'GroundEval GitHub deterministic environment state verifier'"
+      },
+      {
+        "step": 9,
+        "is_done": false,
+        "extracted_preview": "Clicked a \"GitHub - tenurehq/groundeval: ...\""
+      },
+      {
+        "step": 10,
+        "is_done": false,
+        "extracted_preview": "Waited for 3 seconds"
+      },
+      {
+        "step": 11,
+        "is_done": false,
+        "extracted_preview": "Clicked a \"README.md\" aria-label=README.md, (File)"
+      },
+      {
+        "step": 12,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #8993"
+      },
+      {
+        "step": 13,
+        "is_done": false,
+        "extracted_preview": "Found 3 matches for \"openreview.net\" on page:\n\n[1] ...of costly labels to provide cheap model evaluations. Unfortunately, this method of using models as judges introduces ...openreview.netOnly include results for this siteRedo search without this siteBlock this site from all resultsShare feedback ab"
+      },
+      {
+        "step": 14,
+        "is_done": false,
+        "extracted_preview": "Clicked a \"RESpecBench: How reliable is L...\""
+      },
+      {
+        "step": 15,
+        "is_done": false,
+        "extracted_preview": "Searched Duckduckgo for 'Anthropic LLM-as-a-judge evaluation limitations official documentation'"
+      },
+      {
+        "step": 16,
+        "is_done": false,
+        "extracted_preview": "Clicked a \"https://\nwww.anthropic.com\n › ...\""
+      },
+      {
+        "step": 17,
+        "is_done": false,
+        "extracted_preview": "<url>\nhttps://www.anthropic.com/engineering/demystifying-evals-for-ai-agents\n</url>\n<query>\nFind exact passages that support claims about how AI agents should be evaluated, especially any statements about multi-turn evaluations, grading logic, deterministic checks, state/artifact/tool-trace verifica"
+      },
+      {
+        "step": 18,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #6392"
+      },
+      {
+        "step": 19,
+        "is_done": false,
+        "extracted_preview": "Clicked a \"AJ-Bench: Benchmarking Agent-a...\""
+      },
+      {
+        "step": 20,
+        "is_done": false,
+        "extracted_preview": "<url>\nhttps://aj-bench.github.io/\n</url>\n<query>\nFind exact passages that support claims about AJ-Bench evaluating agent-as-judge or environment-aware evaluation, especially statements about state verification, process verification, or limits of judge-only evaluation. Return short exact quotes with "
+      },
+      {
+        "step": 21,
+        "is_done": false,
+        "extracted_preview": "Switched to tab #DC97"
+      },
+      {
+        "step": 22,
+        "is_done": false,
+        "extracted_preview": "Successfully replaced all occurrences of \"- [ ] Open at least four independent source pages, prioritizing primary papers and official documentation.\" with \"- [x] Open at least four independent source pages, prioritizing primary papers and official documentation.\" in file todo.md"
+      },
+      {
+        "step": 23,
+        "is_done": false,
+        "extracted_preview": "Found 8 matches for \"Why LLM judges aren't enough on their own\" on page:\n\n[1] ...ll,\"headerInfo\":{\"toc\":[{\"level\":1,\"text\":\"GroundEval\",\"anchor\":\"groundeval\",\"htmlText\":\"GroundEval\"},{\"level\":2,\"text\":\"Framework support\",\"anchor\":\"framework-support\",\"htmlText\":\"Framework support\"},{\"level\":2,\"text\":"
+      },
+      {
+        "step": 24,
+        "is_done": false,
+        "extracted_preview": "Found 6 matches for \"deterministically\" on page:\n\n[1] ...e\\u003c/li\\u003e\\n\\u003cli\\u003eclaimed evidence exists that simply isn't in the artifacts\\u003c/li\\u003e\\n\\u003c/ul\\u003e\\n\\u003cp dir=\\\"auto\\\"\\u003eGroundEval is built to answer exactly these questions, and it does it deterministically. The "
+      },
+      {
+        "step": 25,
+        "is_done": false,
+        "extracted_preview": "No matches found for \"LLM-as-a-Judge\" on page."
+      }
+    ],
+    "is_successful": true
+  }
+}

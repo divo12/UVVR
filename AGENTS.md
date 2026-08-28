@@ -32,7 +32,8 @@ These instructions apply to coding agents working anywhere in this repository.
 - `unverifiable-to-verifiable-rewards-rl-roadmap.html` is the learning roadmap through the research landscape.
 - `uvvr-eval-workflow-study-guide.html` is the practical concept and workflow guide.
 - `uvvr-skill-work-roadmap.html` is a planning artifact, not executable product behavior.
-- The future `skills/uvvr/SKILL.md` will be the source of truth for UVVR invocation behavior.
+- `design/uvvr-core-contract.md` is the detailed domain-neutral design record behind the runtime skill.
+- `skills/uvvr/SKILL.md` is the source of truth for UVVR invocation behavior.
 - Put substantial conditional guidance in focused `skills/uvvr/references/` files only when the core skill needs progressive disclosure.
 - Put deterministic helpers in `skills/uvvr/scripts/` only when repeated mechanics justify executable code.
 - Keep public teaching examples separate from hidden benchmark and pilot cases.
@@ -62,6 +63,7 @@ When changing UVVR behavior, preserve these observable invariants:
 - Proxy-task gains are not reported as original-task gains without independent evaluation.
 - Policy improvement is separated from test-time search or system-scaffolding gains.
 - The result reports verified, anchored, proxy, and human-only coverage separately.
+- Keep configuration Pareto optimization out of the UVVR runtime skill; it belongs in a separate comparison skill.
 
 ## Dogfood and benchmark implementation
 
@@ -75,7 +77,9 @@ When changing UVVR behavior, preserve these observable invariants:
 - Use a different judge model family from the evaluated model when practical and report disagreement.
 - Require good-reference-pass and plausible-bad-fail self-tests before model spend.
 - Preserve raw outputs for offline rescoring when graders change.
-- Track completion rate, retries, pass@1, pass@3, cost per successful task, and verifier disagreement.
+- Track completion rate, retries, pass@1, pass@3, cost per attempt, cost per successful task, latency p50/p95, uncertainty, and verifier disagreement.
+- Compare only hard-policy-eligible configurations on the `(maximize success, minimize cost, minimize latency)` Pareto frontier.
+- Do not scalarize success, cost, and latency unless the user supplies weights or an explicit product policy.
 - The benchmark must be capable of falsifying UVVR's value and must publish limitations and negative results.
 
 ## Complexity and maintainability
