@@ -1,6 +1,6 @@
 ---
 name: uvvr
-description: Interactively identify an AI system, clarify what its user wants evaluated, and create a readable eval contract package for partly unverifiable work. Use when a user wants to turn fuzzy AI behavior into criteria, verifiers, stress cases, and coding-agent instructions. Do not use for ordinary unit tests with known assertions, directly grading one answer, or general RL/RLVR explanation without an eval-design request.
+description: Interactively identify an AI system, clarify what its user wants evaluated, and create a self-contained executable eval package for partly unverifiable work. Use when a user wants to turn fuzzy AI behavior into criteria, deterministic verifiers, judge-based checks, examples, and coding-agent instructions. Do not use for ordinary unit tests with known assertions, directly grading one answer, or general RL/RLVR explanation without an eval-design request.
 ---
 
 # UVVR
@@ -27,20 +27,17 @@ Describe the system and its current unverifiable reward in a short paragraph, th
 
 ## Phase 2 — Light requirements drill
 
-Ask one question per turn. Ask at most six questions total, including one follow-up that probes an example, hidden assumption, or boundary from an earlier answer. Stop early once the contract can be designed.
+Ask one question per turn and at most three questions total. Combine related uncertainties and stop early once the contract can be designed. A follow-up counts toward the limit and is justified only when proceeding would produce the wrong acceptance decision.
 
 Choose the next unresolved question in this order:
 
-1. What currently makes a run good or bad, who supplies that reward or judgment, why is it hard to verify, and what decision should the new eval support?
-2. Give one concrete successful output and one unacceptable output. What makes the difference consequential?
-3. What evidence can the evaluator actually inspect, and what behavior remains off-screen?
-4. Which failures must block acceptance, and which quality differences should only score or escalate?
-5. Which alternative outputs should count as valid even when they differ from a reference?
-6. Where should the eval package live, and how will the coding agent or team use it?
+1. What decision should the eval make, and what is one clear pass/fail example?
+2. Which single failure must block, what may warn or escalate, and which different outputs remain valid?
+3. Which evidence is authoritative when specifications and observed behavior disagree? Ask only if repository evidence cannot settle it.
 
-Do not use ambiguity percentages, challenge modes, questionnaires, or exhaustive discovery. Do not ask a question already answered by the system card or prior replies.
+Do not ask where to store the package; use the Phase 4 default. Do not use ambiguity percentages, challenge modes, questionnaires, or exhaustive discovery. Do not ask about facts discoverable from the system, repository, or prior replies; state a reversible assumption instead.
 
-Before writing files, summarize the intended eval in five lines: evaluated object, decision, success, blockers, and evidence. Ask **“Should I build the eval package from this?”** Stop and wait; incorporate any correction before proceeding.
+After the last necessary answer, summarize the intended eval in five lines: evaluated object, decision, success, blockers, and evidence. State assumptions and proceed to Phase 3 without another confirmation round; the user may correct them at any time.
 
 ## Phase 3 — Apply the UVVR framework
 
@@ -88,9 +85,11 @@ Use one row per atomic, decision-relevant property:
 | Criterion | Level | Evidence | Verifier / what pass establishes | Role | Blind spot |
 |---|---|---|---|---|---|
 
+Assign exactly one V-level and one role to each row. Use the level of the deciding signal; put supporting anchors in `Evidence` instead of writing composite levels such as `V3 + V4`. Roles are only `block`, `score`, `audit`, or `escalate`; warning is a result status, not a role.
+
 Reject “good,” “safe,” or “high quality” until decomposed into observable properties. Use the strongest feasible evidence and deterministic checks before semantic proxies. Never call an LLM judge, rubric, vote, or reward model ground truth.
 
-Keep hard gates separate from partial-credit signals. Missing evidence or verifier failure produces `unknown` and usually `escalate`, not automatic evaluated-system failure. State any explicitly chosen fail-closed policy.
+Keep hard gates separate from partial-credit signals. `reject` requires sufficient evidence that an explicit `block` criterion failed. Wrong-target runs, missing evidence, malformed input, or verifier failure are evaluator errors with an exact collection/retry path—not product decisions. Do not emit `no_decision`.
 
 ### Stress the verifier
 
@@ -103,19 +102,23 @@ Create four concrete cases from the user's domain:
 
 For each case state the artifact/input, expected criterion results, and why. Add another case only for a named risk. Keep hidden holdouts, graders, reward code, and labels unreadable and unwritable by the evaluated policy.
 
+Embed these four public cases in `evaluate.py` as executable examples with expected decisions. The evaluated agent receives only each case's task input, never its expected decision or private evidence.
+
 ## Phase 4 — Write the eval package
 
 Default to `evals/<system-slug>/` inside the user's project. If that path already contains user-authored files, preserve them and ask before overwriting; otherwise choose a new slug.
 
-Create only these four Markdown files:
+Create only these files:
 
 ```text
 evals/<system-slug>/
 ├── README.md
-├── contract.md
-├── cases.md
-└── runbook.md
+├── design_contract.md
+├── runbook.md
+└── evaluate.py
 ```
+
+Copy `assets/design_contract.md` into the eval folder and adapt every `UVVR_ADAPT` section. Before authoring `runbook.md` or `evaluate.py`, read `references/runbook.md` and `references/evaluate.py` completely. Use those references as required behavioral blueprints, then write system-specific files from the confirmed criteria and actual codebase. Do not ship a renamed generic template. Remove every `UVVR_ADAPT` marker from the generated package; the skill asset/reference retain theirs for future invocations.
 
 ### `README.md`
 
@@ -123,38 +126,54 @@ Include the confirmed system card and an **Underlying unverifiable reward** sect
 
 ```text
 Read every file in this eval folder. First understand the system and underlying
-unverifiable reward in README.md. Use contract.md as the decision authority,
-cases.md as verifier self-tests, and runbook.md as the evidence and execution guide.
-Do not change the contract or expected case outcomes while grading. Do not infer
-missing evidence. Return the result shape defined in runbook.md with artifact paths.
+unverifiable reward in README.md. Use design_contract.md as the decision authority and
+runbook.md as the evidence-collection guide, then read the module docstring and
+examples in evaluate.py. Follow the runbook to collect complete evidence without
+changing the contract or expected outcomes. Run the checklist, every individual
+check, and then the complete evaluation.
 ```
 
-### `contract.md`
+### `design_contract.md`
 
-Include the Phase 3 claim transformation, criterion map, decision policy, trust boundaries, and owned unverifiable remainder, including reference-pool provenance and sampling when used.
+Start from the copied asset. Include the Phase 3 claim transformation, criterion map, decision/error policy, trust boundaries, versioned components, human checklist, and owned unverifiable remainder, including reference-pool provenance and sampling when used.
 
-### `cases.md`
+### `evaluate.py`
 
-Include the four concrete stress cases. They must be specific enough for a coding agent to turn into fixtures or manual checks; do not leave generic placeholders. Add a `fixtures/` directory only when runnable non-Markdown artifacts are actually required.
+Author this from `references/evaluate.py` as the self-contained executable eval. Preserve its safety and CLI contracts while replacing its example configuration and checks with the confirmed system's real functions. Use only the Python standard library unless the confirmed system already requires a dependency.
+
+- Start with a module docstring describing the exact task input and run evidence a coding agent must collect for every case, evidence locations, commands, trust boundaries, and both invocations.
+- Define editable constants for the judge CLI command, model, timeout, and required input fields. Use an argument list with `subprocess.run`; never `shell=True`.
+- Put the four concrete public examples and their expected decisions in `EXAMPLE_CASES`.
+- Implement one small deterministic function per V4/V3 criterion.
+- Put all V1 rubric text, evidence selection, structured-output schema, and isolated judge invocation in `run_judge`. A command such as `codex exec --ephemeral --sandbox read-only` is a judge, not ground truth. Judge failure returns evaluator `error` with a retry path.
+- Implement `evaluate(case) -> result`; only sufficiently evidenced failed `block` criteria may reject. V0 stays in the reported remainder and is never scored.
+- Expose `--checklist`, `--list-checks`, and `--check NAME <run.json>` so the coding agent can collect inputs and test every deterministic or judge criterion individually.
+- `python evaluate.py` runs the embedded examples without model spend by using fixed judge fixtures. `python evaluate.py <run.json>` evaluates one case or a JSON list and invokes the configured judge only when V1 evidence exists.
+- Validate all inputs and keep raw evidence references in the result. Make sampling reproducible when references affect a score.
+
+Do not weaken the reference's guarded subprocess, input-validation, private-fixture, image-root, completeness-error, or decision-aggregation behavior. Change one only when the confirmed contract requires a stricter rule and record why in `design_contract.md`.
 
 ### `runbook.md`
 
-Specify evidence locations, verifier order, concrete commands when already available, expected artifacts, stopping conditions, and recovery for missing evidence or verifier errors. Make reference sampling reproducible when it affects a score. End with this result shape:
+Author this from `references/runbook.md`. It must give the coding agent concrete system commands, a field-by-field input map, criterion-to-evidence collection, completeness gate, individual-check commands, full-eval commands, human checklist, judge prerequisites, owners, and exact recovery. It must make every required input collectable and must not duplicate the criterion contract.
+
+Print this result shape as JSON:
 
 ```yaml
 status: success | warning | error
-decision: accept | reject | escalate | no_decision
+decision: accept | reject | escalate  # absent when status is error
 summary: one-line outcome
 criteria: {}
 evidence: []
+human_checklist: []
 next_actions: []
 artifacts: []
 ```
 
-Do not create verifier scripts, dependencies, manifests, result directories, or hidden datasets until the user asks or the confirmed system already requires them.
+Do not create runners, adapters, manifests, result directories, or hidden datasets around `evaluate.py` until an observed need requires them.
 
 ## Completion
 
-Finish only when the system card and underlying reward were confirmed, the light drill resolved decision-relevant ambiguity, all four files exist and agree, each criterion has evidence and a blind spot, the four cases are concrete, and the unverifiable remainder has an owner.
+Finish only when the system card and underlying reward were confirmed, the light drill resolved decision-relevant ambiguity, all four files agree, no `UVVR_ADAPT` marker remains in the generated package, every required input has a runbook collection path, every listed check runs individually, the four embedded examples pass with `python evaluate.py`, a complete test case runs end to end, and the unverifiable remainder has an owner.
 
-Report the created file paths and the exact next handoff. If material evidence is missing, still write the useful package with `unknown` and its owner rather than fabricating certainty.
+Report the created file paths and exact next handoff. If material evidence cannot be collected, revise the criterion or add instrumentation before completing the package; never fabricate certainty or emit `no_decision`.
