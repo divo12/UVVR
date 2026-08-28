@@ -15,16 +15,15 @@ Inspect user-provided repositories, documentation, examples, prompts, traces, an
 
 Present a short **system card**:
 
-- system and purpose;
+- system purpose and a plain-language input → actions → output description;
 - trigger or input;
-- model/agent and available actions;
-- environment and important constraints;
-- produced output or trajectory;
+- model/agent, available actions, environment, and important constraints;
+- current reward or good/bad judgment, who supplies it, and why it is not directly verifiable;
 - user or downstream decision the output serves;
 - evidence currently observable to an evaluator;
 - observed facts versus assumptions.
 
-Ask one confirmation question: **“Is this the system you want to evaluate? What is wrong or missing?”** Stop and wait. If corrected, update the card and confirm it again before proceeding.
+Describe the system and its current unverifiable reward in a short paragraph, then ask: **“Is this the system you want to evaluate, and is that how success is currently judged? What is wrong or missing?”** Stop and wait. If corrected, update the card and confirm it again before proceeding.
 
 ## Phase 2 — Light requirements drill
 
@@ -32,7 +31,7 @@ Ask one question per turn. Ask at most six questions total, including one follow
 
 Choose the next unresolved question in this order:
 
-1. What decision will this eval support: release, regression, model selection, monitoring, or something else?
+1. What currently makes a run good or bad, who supplies that reward or judgment, why is it hard to verify, and what decision should the new eval support?
 2. Give one concrete successful output and one unacceptable output. What makes the difference consequential?
 3. What evidence can the evaluator actually inspect, and what behavior remains off-screen?
 4. Which failures must block acceptance, and which quality differences should only score or escalate?
@@ -51,12 +50,18 @@ Record:
 
 ```text
 original_claim: the outcome the user actually cares about
+current_reward: what currently labels or signals success
+why_unverifiable: why that reward cannot directly prove the original claim
 evaluable_claim: the narrower claim the proposed evidence can support
 capability_lost: what the transformation no longer measures
 transfer_check: how improvement will be checked on the original task
 ```
 
 Useful transformations include a known answer, reference-conditioned replication, executable end state, temporal snapshots, round trip, metamorphic relation, differential comparison, simulation, provenance check, human review, or delayed outcome. A perfect proxy label does not prove original-task quality.
+
+For subjective rewards, first render or otherwise expose an inspectable outcome and keep executable eligibility checks separate from quality. When absolute rubric scores are compressed or arbitrary, prefer relative comparison against several human-curated references. Record who selected the pool, its inclusion rule and coverage, the sampled references, and the comparison judge. This remains a V1 judgment grounded by V2 anchors—not ground truth.
+
+Before combining reward components, remove signals that duplicate one another or have already saturated. Keep reward changes separate from prompt, tool, retry, and action-space changes so improvement is attributed correctly.
 
 ### Assign verification strength
 
@@ -114,10 +119,11 @@ evals/<system-slug>/
 
 ### `README.md`
 
-Include the confirmed system card, eval purpose, package status, file map, and this ready-to-use coding-agent handoff adapted to the project:
+Include the confirmed system card and an **Underlying unverifiable reward** section explaining the current signal, who supplies it, what it rewards, why it cannot prove success, and its known failure modes. Then include the eval purpose, package status, file map, and this ready-to-use coding-agent handoff adapted to the project:
 
 ```text
-Read every file in this eval folder. Use contract.md as the decision authority,
+Read every file in this eval folder. First understand the system and underlying
+unverifiable reward in README.md. Use contract.md as the decision authority,
 cases.md as verifier self-tests, and runbook.md as the evidence and execution guide.
 Do not change the contract or expected case outcomes while grading. Do not infer
 missing evidence. Return the result shape defined in runbook.md with artifact paths.
@@ -125,7 +131,7 @@ missing evidence. Return the result shape defined in runbook.md with artifact pa
 
 ### `contract.md`
 
-Include the original-to-evaluable claim transformation, the criterion map, block/score/escalation policy, what `pass`, `fail`, and `unknown` mean, trust boundaries, and the owned unverifiable remainder.
+Include the Phase 3 claim transformation, criterion map, decision policy, trust boundaries, and owned unverifiable remainder, including reference-pool provenance and sampling when used.
 
 ### `cases.md`
 
@@ -133,7 +139,7 @@ Include the four concrete stress cases. They must be specific enough for a codin
 
 ### `runbook.md`
 
-Specify evidence locations, verifier order, concrete commands when already available, expected artifacts, stopping conditions, and recovery for missing evidence or verifier errors. End with this result shape:
+Specify evidence locations, verifier order, concrete commands when already available, expected artifacts, stopping conditions, and recovery for missing evidence or verifier errors. Make reference sampling reproducible when it affects a score. End with this result shape:
 
 ```yaml
 status: success | warning | error
@@ -149,6 +155,6 @@ Do not create verifier scripts, dependencies, manifests, result directories, or 
 
 ## Completion
 
-Finish only when the system card was confirmed, the light drill resolved decision-relevant ambiguity, all four files exist and agree, each criterion has evidence and a blind spot, the four cases are concrete, and the unverifiable remainder has an owner.
+Finish only when the system card and underlying reward were confirmed, the light drill resolved decision-relevant ambiguity, all four files exist and agree, each criterion has evidence and a blind spot, the four cases are concrete, and the unverifiable remainder has an owner.
 
 Report the created file paths and the exact next handoff. If material evidence is missing, still write the useful package with `unknown` and its owner rather than fabricating certainty.
