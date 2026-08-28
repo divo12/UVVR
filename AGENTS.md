@@ -28,7 +28,6 @@ These instructions apply to coding agents working anywhere in this repository.
 ## Repository architecture
 
 - `AGENTS.md` contains repository engineering rules for coding agents. It must not duplicate the future UVVR runtime workflow.
-- `unverifiable-to-verifiable-rewards-research.md` is the detailed research source.
 - `design/uvvr-core-contract.md` is the detailed domain-neutral design record behind the runtime skill.
 - `skills/uvvr/SKILL.md` is the source of truth for UVVR invocation behavior.
 - Put substantial conditional guidance in focused `skills/uvvr/references/` files only when the core skill needs progressive disclosure.
@@ -105,7 +104,6 @@ Run only commands whose artifacts exist at the current project stage.
 ```bash
 # Current repository contract and research artifacts
 test -f AGENTS.md
-test -f unverifiable-to-verifiable-rewards-research.md
 # Skill validation, once the skill exists
 python3 ~/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/uvvr
 

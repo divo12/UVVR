@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "uvvr",
+  "description": "Executable evaluation design for AI systems with partly unverifiable outcomes.",
+  "owner": {
+    "name": "Divyansh",
+    "url": "https://github.com/divo12"
+  },
+  "plugins": [
+    {
+      "name": "uvvr",
+      "description": "Turn fuzzy AI rewards into explicit criteria, evidence collection, and executable evaluators.",
+      "source": "./",
+      "category": "productivity"
+    }
+  ]
+}
