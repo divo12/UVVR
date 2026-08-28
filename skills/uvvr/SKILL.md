@@ -145,6 +145,7 @@ Author this from `references/evaluate.py` as the self-contained executable eval.
 - Define editable constants for the judge CLI command, model, timeout, and required input fields. Use an argument list with `subprocess.run`; never `shell=True`.
 - Put the four concrete public examples and their expected decisions in `EXAMPLE_CASES`.
 - Implement one small deterministic function per V4/V3 criterion.
+- Keep deterministic functions scoped to their documented fields; they must not rerun global/private-fixture validation or recursively call `evaluate`.
 - Put all V1 rubric text, evidence selection, structured-output schema, and isolated judge invocation in `run_judge`. A command such as `codex exec --ephemeral --sandbox read-only` is a judge, not ground truth. Judge failure returns evaluator `error` with a retry path.
 - Implement `evaluate(case) -> result`; only sufficiently evidenced failed `block` criteria may reject. V0 stays in the reported remainder and is never scored.
 - Expose `--checklist`, `--list-checks`, and `--check NAME <run.json>` so the coding agent can collect inputs and test every deterministic or judge criterion individually.
@@ -156,6 +157,12 @@ Do not weaken the reference's guarded subprocess, input-validation, private-fixt
 ### `runbook.md`
 
 Author this from `references/runbook.md`. It must give the coding agent concrete system commands, a field-by-field input map, criterion-to-evidence collection, completeness gate, individual-check commands, full-eval commands, human checklist, judge prerequisites, owners, and exact recovery. It must make every required input collectable and must not duplicate the criterion contract.
+
+Prove from implementation—not documentation alone—that the selected full-run invocation returns every evaluator-required artifact after wrapper serialization/redaction. Include bounded cold-start, health, run, judge, cleanup, and retry commands when the system is not guaranteed to be available.
+
+Run safe runtime/version preflights while authoring. The generated setup commands must match the observed environment and pinned dependencies; do not prescribe an untested native runtime when the repository requires a different version or container.
+
+Reject the generated runbook if any long-running build, dependency/browser install, health probe, system/agent run, or judge call lacks an explicit timeout and cleanup path. A command having succeeded once does not make an unbounded instruction acceptable.
 
 Print this result shape as JSON:
 
@@ -174,6 +181,8 @@ Do not create runners, adapters, manifests, result directories, or hidden datase
 
 ## Completion
 
-Finish only when the system card and underlying reward were confirmed, the light drill resolved decision-relevant ambiguity, all four files agree, no `UVVR_ADAPT` marker remains in the generated package, every required input has a runbook collection path, every listed check runs individually, the four embedded examples pass with `python evaluate.py`, a complete test case runs end to end, and the unverifiable remainder has an owner.
+Finish only when the system card and underlying reward were confirmed, the light drill resolved decision-relevant ambiguity, all four files agree, no `UVVR_ADAPT` marker remains in the generated package, every required input has a proven runbook collection path, each deterministic check runs with only its own documented evidence, every listed check runs individually, the four embedded examples pass with `python evaluate.py`, one real configured judge call (not a shim/fixture) returns schema-valid output, a complete test case runs end to end, and the unverifiable remainder has an owner.
+
+If the real system path or real judge path cannot be executed, leave the package explicitly `draft`, return `needs_input` with the exact external blocker and preserved evidence, and do not claim completion merely because fixtures pass.
 
 Report the created file paths and exact next handoff. If material evidence cannot be collected, revise the criterion or add instrumentation before completing the package; never fabricate certainty or emit `no_decision`.

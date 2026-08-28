@@ -60,6 +60,26 @@ runs, and judge calls. Document how to distinguish system failure from a busy or
 broken local runtime, and do not let abandoned setup processes continue in the
 background.
 
+Before writing this section, actually run the safe preflights and inspect the
+repository's runtime declarations (`Dockerfile`, package/requirements files,
+version files, service README). Do not prescribe the bare `python3` on a host whose
+observed version cannot install the pinned dependencies. Choose a compatible,
+available path and record the observed version/evidence behind that choice.
+
+If the service is not guaranteed to be running, include a concrete cold-start
+path (native, container, or approved remote), health probe, cleanup command, and
+timeout for every setup/run step. Naming an endpoint without explaining how to
+make it reachable is incomplete.
+
+A generated runbook fails acceptance if it contains bare long-running commands
+such as `docker build`, dependency/browser installation, service/agent execution,
+or `curl` without an explicit bound. Use a platform-available timeout wrapper or
+`subprocess.run(..., timeout=...)` for builds/installs and `--max-time` for curl.
+
+Execute the chosen preflight/health path when safe. If shared infrastructure or
+missing authority prevents it, mark the generated package `draft`/incomplete and
+report the exact blocker; do not claim the runbook path is proven.
+
 ### 3. Case JSON field map
 
 Copy the exact schema from the adapted `evaluate.py` module docstring. For every
@@ -71,6 +91,12 @@ field provide:
 At minimum explain `id`, `input`, `output`, and `evidence`. List every name in
 `REQUIRED_OUTPUT_FIELDS` and `REQUIRED_EVIDENCE_FIELDS`. If a field contains a
 path, state its allowed root and who intentionally selected it.
+
+For every output/artifact, prove that the selected invocation path actually
+returns or persists it. Inspect wrapper routes, serializers, redaction, truncation,
+and context-size filters. If a convenient MCP/API wrapper removes an artifact
+required by `evaluate.py`, the runbook must use a lower-level path or add explicit
+instrumentation rather than claiming the field is collectable.
 
 Private example keys such as `expected_decision` and `judge_fixture` must never
 appear in real-run JSON.
@@ -120,6 +146,10 @@ When semantic interpretation is required, pass raw evidence to `evaluate.py`;
 do not pre-label the criterion in collected input unless the deterministic input
 contract explicitly requires an instrumented status.
 
+If the system has multiple invocation paths, name which one is valid for the full
+eval and which support only partial/debug checks. Verify artifact parity from code,
+not documentation alone.
+
 ### 6. Completeness gate
 
 The runbook must make this command actionable:
@@ -131,6 +161,11 @@ python evaluate.py --checklist
 Before a full eval, the coding agent checks every returned item and every required
 field. Incomplete input is an evaluator `error`, not `no_decision`. Provide the
 exact recollection/retry step for each possible missing field.
+
+Every criterion that participates in the complete result—including `score` and
+`escalate` criteria—must be conclusive. `unknown` is allowed only as an individual
+check result that instructs recollection/retry; the full evaluator must return
+`error` until all criteria have judgeable evidence.
 
 If a required field can never be collected in the actual environment, stop and
 change the design contract/evaluator before running model comparisons.
@@ -159,6 +194,12 @@ Give one concrete command for every deterministic function and V1 criterion.
 Explain whether the command spends judge tokens. Use individual checks as a
 debugging checklist; do not cherry-pick only favorable checks for the final call.
 
+Each individual deterministic check must run with only its own documented fields;
+do not require screenshot/design/judge inputs to debug a URL or schema check.
+Judge checks may require their complete rubric-specific evidence.
+Deterministic check functions must not rerun global/private-field validation;
+`evaluate(..., allow_judge_fixture=True)` owns fixture trust for embedded examples.
+
 ### 9. Run the complete eval
 
 Document:
@@ -185,6 +226,11 @@ For each V1 criterion state:
 
 Judge failure is evaluator `error`; retry or repair it. Do not silently replace it
 with a pass, rejection, or `no_decision`.
+
+Before delivery, run at least one real configured judge invocation using complete
+non-private evidence. A shim/fixed fixture proves decision plumbing only and does
+not prove CLI flags, authentication, image attachment, schema parsing, or timeout.
+Do not cite a shim as satisfaction of this gate.
 
 ### 11. Human checklist
 
@@ -232,11 +278,19 @@ Before delivery, verify:
 - every evaluator-required field appears in the field map;
 - every criterion maps to a callable check and collectable evidence;
 - actual system invocation commands are concrete;
+- runtime/setup commands match versions observed during generation;
 - setup, system, and judge commands have explicit timeouts and cleanup;
+- no bare long-running build/install/health/run command remains unbounded;
+- the selected full-run path is proven to expose every required artifact;
 - individual-check commands cover all listed checks;
+- deterministic individual checks require only their own evidence;
+- embedded private fixture allowance reaches every check without being re-rejected;
 - judge prerequisites and failure recovery are explicit;
 - image paths are constrained by `UVVR_EVIDENCE_ROOT`;
 - examples run without judge spend;
+- one real configured judge call succeeds with structured output;
+- the generated status remains draft/incomplete when either the real system path
+  or real judge path could not be executed;
 - full evaluation has no `no_decision` branch;
 - incomplete input and judge failure return evaluator `error` with next actions;
 - no private labels, credentials, or `UVVR_ADAPT` markers appear in the generated

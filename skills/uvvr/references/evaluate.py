@@ -29,6 +29,8 @@ Incomplete input or judge failure returns evaluator `error` plus collection/retr
 instructions. Complete evaluations decide only `accept`, `reject`, or `escalate`.
 There is no `no_decision`: the runbook must make missing evidence collectable.
 V0 concerns remain in `HUMAN_CHECKLIST` and are never assigned a fake score.
+An individual `--check` may return `unknown` to request more evidence; a complete
+evaluation must error until every automatic/judge criterion is conclusive.
 """
 
 from __future__ import annotations
@@ -165,6 +167,9 @@ def check_evidence_consistency(case: dict[str, Any]) -> dict[str, Any]:
 
 
 # UVVR_ADAPT: add one function per V4/V3 criterion and register it here.
+# Check functions inspect only their documented fields. They must not call
+# validate_shape/evaluate recursively: outer entrypoints own trust mode, including
+# allow_private=True for embedded examples.
 DETERMINISTIC_CHECKS: dict[str, Callable[[dict[str, Any]], dict[str, Any]]] = {
     "required_output": check_required_output,
     "evidence_consistency": check_evidence_consistency,
@@ -303,11 +308,14 @@ def _judge_results(judge: dict[str, Any]) -> dict[str, dict[str, Any]]:
 
 
 def _decision(criteria: dict[str, dict[str, Any]]) -> str:
+    unknown = [name for name, item in criteria.items() if item["status"] == "unknown"]
+    if unknown:
+        raise EvaluationInputError(
+            f"criteria remain unknown: {', '.join(unknown)}; collect the runbook evidence"
+        )
     if any(item["role"] == "block" and item["status"] == "fail" for item in criteria.values()):
         return "reject"
-    if any(item["role"] == "block" and item["status"] == "unknown" for item in criteria.values()):
-        raise EvaluationInputError("a block criterion remains unknown; collect the runbook evidence")
-    if any(item["role"] == "escalate" and item["status"] != "pass" for item in criteria.values()):
+    if any(item["role"] == "escalate" and item["status"] == "fail" for item in criteria.values()):
         return "escalate"
     return "accept"
 
