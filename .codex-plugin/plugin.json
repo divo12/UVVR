@@ -1,0 +1,28 @@
+{
+  "name": "uvvr",
+  "version": "0.1.0",
+  "description": "Turn partly unverifiable AI outcomes into explicit, executable evaluation packages.",
+  "author": {
+    "name": "Divyansh",
+    "url": "https://github.com/divo12"
+  },
+  "homepage": "https://github.com/divo12/UVVR",
+  "repository": "https://github.com/divo12/UVVR",
+  "keywords": ["ai-evals", "verification", "agents", "reward-design"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "UVVR",
+    "shortDescription": "Build executable evals for fuzzy AI outcomes",
+    "longDescription": "Identify an AI system's unverifiable reward, convert it into explicit V4–V1 criteria, and generate a design contract, evidence runbook, and executable evaluator.",
+    "developerName": "Divyansh",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Write", "Evaluation"],
+    "websiteURL": "https://github.com/divo12/UVVR",
+    "defaultPrompt": [
+      "Design an executable eval for my AI system.",
+      "Turn this fuzzy reward into verifiable criteria.",
+      "Create an eval package for this agent workflow."
+    ],
+    "brandColor": "#4F46E5"
+  }
+}
