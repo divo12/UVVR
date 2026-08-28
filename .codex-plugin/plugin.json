@@ -8,6 +8,7 @@
   },
   "homepage": "https://github.com/divo12/UVVR",
   "repository": "https://github.com/divo12/UVVR",
+  "license": "MIT",
   "keywords": ["ai-evals", "verification", "agents", "reward-design"],
   "skills": "./skills/",
   "interface": {

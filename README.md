@@ -9,6 +9,7 @@
   <img src="https://img.shields.io/badge/plugin-0.1.0-4F46E5?style=flat-square" alt="Plugin version 0.1.0">
   <img src="https://img.shields.io/badge/works%20with-Codex%20%7C%20Claude%20Code%20%7C%20OpenCode%20%7C%20Cursor-111111?style=flat-square" alt="Works with Codex, Claude Code, OpenCode, and Cursor">
   <img src="https://img.shields.io/badge/status-alpha-F59E0B?style=flat-square" alt="Alpha status">
+  <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
 </p>
 
 ---
@@ -419,6 +420,4 @@ cleaner by hiding uncertainty is a regression.
 
 ## License
 
-No license has been selected yet. The source is publicly visible, but reuse rights
-are not granted until a `LICENSE` file is added. Choose a license explicitly before
-calling the project open source or publishing a stable release.
+[MIT](LICENSE).
