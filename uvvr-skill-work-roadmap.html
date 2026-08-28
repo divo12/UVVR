@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>UVVR Skill Work Roadmap</title>
+  <style>
+    :root {
+      --bg: #f4f2ec;
+      --paper: #fffdf8;
+      --ink: #1e2729;
+      --muted: #5d696b;
+      --line: #d8d5cc;
+      --teal: #0f766e;
+      --teal-soft: #ddf3ee;
+      --blue: #2656b8;
+      --blue-soft: #e8efff;
+      --amber: #9a5c0a;
+      --amber-soft: #fff1d6;
+      --red: #aa4037;
+      --red-soft: #fde9e5;
+      --violet: #6546b7;
+      --violet-soft: #efe9ff;
+      --shadow: 0 14px 44px rgba(25, 38, 40, .08);
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(15,118,110,.10), transparent 30rem),
+        radial-gradient(circle at 92% 5%, rgba(101,70,183,.08), transparent 28rem),
+        var(--bg);
+      font: 16px/1.68 ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      text-rendering: optimizeLegibility;
+    }
+    a { color: var(--teal); text-underline-offset: 3px; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    code { padding: .12rem .32rem; border-radius: 5px; background: rgba(15,118,110,.08); }
+    pre {
+      margin: 1.1rem 0;
+      padding: 1rem 1.15rem;
+      overflow-x: auto;
+      color: #e7f2ef;
+      background: #172023;
+      border: 1px solid #314044;
+      border-radius: 12px;
+      line-height: 1.52;
+    }
+    .page { width: min(1220px, calc(100% - 32px)); margin: 0 auto; }
+    .hero { padding: 70px 0 38px; }
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 11px;
+      border: 1px solid rgba(170,64,55,.26);
+      border-radius: 999px;
+      color: var(--red);
+      background: rgba(255,255,255,.62);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 900px;
+      margin: 20px 0 0;
+      font: 760 clamp(2.6rem, 7vw, 5.4rem)/.98 ui-serif, Georgia, serif;
+      letter-spacing: -.055em;
+    }
+    .hero p { max-width: 820px; margin: 26px 0 0; color: var(--muted); font-size: 1.2rem; }
+    .chips { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 25px; }
+    .chip { padding: 6px 10px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.55); color: var(--muted); font-size: .82rem; }
+    .layout { display: grid; grid-template-columns: 270px minmax(0,1fr); gap: 26px; align-items: start; padding-bottom: 90px; }
+    nav {
+      position: sticky;
+      top: 18px;
+      max-height: calc(100vh - 36px);
+      overflow: auto;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,253,248,.90);
+      backdrop-filter: blur(14px);
+      box-shadow: var(--shadow);
+    }
+    nav strong { display: block; margin-bottom: 9px; font-size: .78rem; letter-spacing: .08em; text-transform: uppercase; }
+    nav ul { list-style: none; margin: 0; padding: 0; }
+    nav li + li { margin-top: 2px; }
+    nav a { display: block; padding: 7px 9px; border-radius: 8px; color: var(--muted); font-size: .87rem; line-height: 1.25; text-decoration: none; }
+    nav a:hover { color: var(--teal); background: var(--teal-soft); }
+    main { min-width: 0; }
+    section {
+      scroll-margin-top: 22px;
+      margin-bottom: 23px;
+      padding: clamp(24px,4vw,44px);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,253,248,.95);
+      box-shadow: var(--shadow);
+    }
+    h2 { margin: 0 0 18px; font: 730 clamp(1.75rem,3.8vw,2.5rem)/1.08 ui-serif, Georgia, serif; letter-spacing: -.035em; }
+    h3 { margin: 1.8rem 0 .55rem; font-size: 1.15rem; line-height: 1.3; }
+    h4 { margin: 1.2rem 0 .4rem; }
+    p { margin: .72rem 0; }
+    ul, ol { padding-left: 1.35rem; }
+    li + li { margin-top: .38rem; }
+    .lede { color: var(--muted); font-size: 1.08rem; }
+    .thesis { margin: 22px 0; padding: 22px; border-left: 5px solid var(--teal); border-radius: 0 12px 12px 0; background: var(--teal-soft); font: 650 1.18rem/1.55 ui-serif, Georgia, serif; }
+    .callout { margin: 18px 0; padding: 17px 19px; border: 1px solid var(--line); border-radius: 12px; }
+    .callout.red { background: var(--red-soft); border-color: rgba(170,64,55,.25); }
+    .callout.amber { background: var(--amber-soft); border-color: rgba(154,92,10,.25); }
+    .callout.blue { background: var(--blue-soft); border-color: rgba(38,86,184,.24); }
+    .callout.violet { background: var(--violet-soft); border-color: rgba(101,70,183,.24); }
+    .grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 13px; margin: 18px 0; }
+    .card { padding: 18px; border: 1px solid var(--line); border-radius: 12px; background: rgba(255,255,255,.55); }
+    .card h3, .card h4 { margin-top: 0; }
+    .card p:last-child { margin-bottom: 0; }
+    .step {
+      margin: 20px 0;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,.46);
+    }
+    .step-head { display: flex; gap: 13px; align-items: flex-start; }
+    .num { flex: 0 0 auto; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; color: white; background: var(--teal); font-weight: 850; }
+    .step h3 { margin: 2px 0 3px; font-size: 1.25rem; }
+    .meta { color: var(--muted); font-size: .87rem; }
+    .step-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 12px; margin-top: 17px; }
+    .step-grid > div { padding: 14px; border-radius: 10px; background: rgba(15,118,110,.055); }
+    .step-grid strong { display: block; margin-bottom: 5px; color: var(--teal); font-size: .8rem; letter-spacing: .04em; text-transform: uppercase; }
+    .graph { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin: 20px 0; }
+    .node { padding: 10px 13px; border: 1px solid var(--line); border-radius: 10px; background: var(--blue-soft); font-weight: 720; }
+    .arrow { color: var(--muted); font-weight: 800; }
+    .table-wrap { margin: 18px 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+    table { width: 100%; min-width: 700px; border-collapse: collapse; background: rgba(255,255,255,.5); }
+    th, td { padding: 11px 13px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: rgba(15,118,110,.07); font-size: .76rem; letter-spacing: .04em; text-transform: uppercase; }
+    tr:last-child td { border-bottom: 0; }
+    .gate { color: var(--amber); font-weight: 760; }
+    .parallel { color: var(--violet); font-weight: 760; }
+    .checklist { list-style: none; padding-left: 0; }
+    .checklist li { position: relative; padding-left: 27px; }
+    .checklist li::before { content: "□"; position: absolute; left: 2px; color: var(--teal); font-weight: 850; }
+    details { margin: 11px 0; border: 1px solid var(--line); border-radius: 11px; background: rgba(255,255,255,.48); }
+    summary { cursor: pointer; padding: 13px 15px; font-weight: 720; }
+    details > div { padding: 0 15px 15px; }
+    footer { padding: 10px 0 55px; color: var(--muted); text-align: center; font-size: .87rem; }
+    @media (max-width: 900px) { .layout { grid-template-columns: 1fr; } nav { position: static; max-height: none; } nav ul { columns: 2; } }
+    @media (max-width: 640px) { .page { width: min(100% - 20px,1220px); } .hero { padding-top: 42px; } .grid,.step-grid { grid-template-columns: 1fr; } nav ul { columns: 1; } section { padding: 21px 18px; } }
+    @media print { body { background: white; } .page { width: 100%; } nav { display: none; } .layout { display: block; } section { box-shadow: none; break-inside: avoid; } }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg:#111719; --paper:#182023; --ink:#e8eeec; --muted:#adbbb8; --line:#354145; --teal:#5fd2c3; --teal-soft:#173a37; --blue-soft:#192a4b; --amber-soft:#3a2b15; --red-soft:#3e211f; --violet-soft:#29213f; --shadow:0 14px 44px rgba(0,0,0,.25); }
+      nav,section { background: rgba(24,32,35,.95); }
+      .card,.step,details,table,.chip,.status { background: rgba(255,255,255,.03); }
+      .step-grid > div { background: rgba(95,210,195,.06); }
+      th { background: rgba(95,210,195,.08); }
+    }
+  </style>
+</head>
+<body>
+  <header class="hero page">
+    <div class="status">Plan only · no implementation yet</div>
+    <h1>UVVR skill work roadmap</h1>
+    <p>A learning-gated construction plan for turning the unverifiable-to-verifiable research into a compact AI-agent skill, validating it on real tasks, and only then packaging it as a Codex plugin.</p>
+    <div class="chips">
+      <span class="chip">Ponytail evolution as reference</span>
+      <span class="chip">8 construction steps</span>
+      <span class="chip">Cold-start briefs</span>
+      <span class="chip">Adversarially reviewed</span>
+      <span class="chip">Readiness, not calendar dates</span>
+    </div>
+  </header>
+
+  <div class="layout page">
+    <nav aria-label="Roadmap contents">
+      <strong>Roadmap</strong>
+      <ul>
+        <li><a href="#objective">1. Objective and boundaries</a></li>
+        <li><a href="#reference">2. What Ponytail teaches</a></li>
+        <li><a href="#shape">3. Target product shape</a></li>
+        <li><a href="#learning">4. Learning gates</a></li>
+        <li><a href="#graph">5. Dependency graph</a></li>
+        <li><a href="#steps">6. Construction steps</a></li>
+        <li><a href="#benchmark">7. Benchmark strategy</a></li>
+        <li><a href="#structure">8. Repository evolution</a></li>
+        <li><a href="#antipatterns">9. Anti-patterns</a></li>
+        <li><a href="#risks">10. Risks and mitigations</a></li>
+        <li><a href="#mutation">11. Plan mutation</a></li>
+        <li><a href="#decision">12. First decision</a></li>
+      </ul>
+    </nav>
+
+    <main>
+      <section id="objective">
+        <h2>1. Objective and boundaries</h2>
+        <div class="thesis">Build a skill that helps an AI-product team convert a fuzzy task into the strongest feasible eval package: deterministic gates, observable outcomes, independent anchors, calibrated semantic proxies, and an explicit unverifiable remainder.</div>
+        <h3>Primary user</h3>
+        <p>An engineer, researcher, or product owner who knows what their AI system should accomplish but does not yet know how to turn that intent into defensible evals.</p>
+        <h3>Core job</h3>
+        <pre><code>Input:  task description + examples + risks + available evidence
+
+UVVR:   decompose intent
+        route criteria to V4/V3/V2/V1/V0
+        propose task transformations
+        specify eval cases and graders
+        validate the graders
+
+Output: eval contract + verification ledger + unresolved remainder</code></pre>
+        <div class="grid">
+          <div class="card"><h3>Must do</h3><ul><li>Separate verification from proxy judgment.</li><li>Prefer external evidence and execution.</li><li>Expose grader blind spots.</li><li>Generate actionable eval artifacts.</li></ul></div>
+          <div class="card"><h3>Must not claim</h3><ul><li>Universal objective truth.</li><li>Automatic verification of taste or ethics.</li><li>That an LLM judge is ground truth.</li><li>That a high score proves deployment safety.</li></ul></div>
+        </div>
+        <h3>Explicit non-goals for the first version</h3>
+        <ul>
+          <li>No hosted eval platform.</li>
+          <li>No database or dashboard.</li>
+          <li>No MCP server.</li>
+          <li>No always-on lifecycle hooks or persistent modes.</li>
+          <li>No support for every agent host.</li>
+          <li>No automatic execution of untrusted generated grader code.</li>
+        </ul>
+      </section>
+
+      <section id="reference">
+        <h2>2. What Ponytail teaches us</h2>
+        <p class="lede">Copy the sequence that created value, not the complexity of its current repository.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Ponytail stage</th><th>What existed</th><th>UVVR analogue</th></tr></thead>
+            <tbody>
+              <tr><td><a href="https://github.com/DietrichGebert/ponytail/tree/ef60494">True MVP</a></td><td>One skill, README, five before/after examples.</td><td>One UVVR skill, concept statement, four eval-conversion examples.</td></tr>
+              <tr><td><a href="https://github.com/DietrichGebert/ponytail/commit/7a3475c">Plugin integration</a></td><td>Hooks, commands, manifests, cross-agent rule copies.</td><td>Delay until the instruction-only UVVR workflow proves useful.</td></tr>
+              <tr><td>Behavior hardening</td><td>Rules changed in response to concrete failures and critique.</td><td>Revise the UVVR ladder from dogfood failures, not imagined edge cases.</td></tr>
+              <tr><td><a href="https://github.com/DietrichGebert/ponytail/tree/main/benchmarks/agentic">Agentic benchmark</a></td><td>Real workspaces, deterministic gates, calibrated residual judge, documented limits.</td><td>Real AI-system tasks, verified coverage, proxy calibration, external holdout.</td></tr>
+              <tr><td>Companion skills</td><td>Review, audit, debt, gain, help emerged as distinct jobs.</td><td>Add audit/calibrate/ledger/help only after repeated use shows the boundaries.</td></tr>
+              <tr><td>Portability</td><td>Codex, Claude, OpenCode, Pi, Qoder, Grok, and others.</td><td>Codex first; other hosts only when users request them.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout amber"><strong>Central lesson:</strong> Ponytail's core skill is still about 120 lines. Most of its 15,000+ repository lines now support distribution, testing, benchmarks, and adapters. UVVR should keep its intellectual engine comparably compact.</div>
+      </section>
+
+      <section id="shape">
+        <h2>3. Target product shape</h2>
+        <p>The skill should behave like an interactive eval architect. It asks only for missing information that materially changes the eval design, then emits a standard artifact.</p>
+        <h3>Required workflow inside the skill</h3>
+        <ol>
+          <li>Capture intended outcomes, failure examples, forbidden outcomes, and available evidence.</li>
+          <li>Decompose vague quality into atomic criteria.</li>
+          <li>Route every criterion through the V4→V0 ladder.</li>
+          <li>Suggest transformations for criteria that cannot be checked directly.</li>
+          <li>Generate normal, negative, boundary, adversarial, counterfactual, invariance, and OOD cases.</li>
+          <li>Define grader calibration with known-good, known-bad, valid-alternative, and exploit outputs.</li>
+          <li>Produce a verification ledger rather than one opaque score.</li>
+        </ol>
+        <h3>First output contract</h3>
+        <pre><code># UVVR Eval Contract
+
+## Intended outcome
+## Forbidden outcomes
+## Criterion map
+| Criterion | V-level | Grader | Gate? | Blind spot |
+
+## Task transformations
+## Eval case families
+## Grader calibration set
+## Holdout and isolation rules
+## Metrics and release thresholds
+## Unverifiable remainder
+## Verification ledger</code></pre>
+        <h3>Eventual companion operations</h3>
+        <div class="grid">
+          <div class="card"><h3><code>uvvr</code></h3><p>Construct an eval contract from an AI-system task.</p></div>
+          <div class="card"><h3><code>uvvr-audit</code></h3><p>Find where an existing eval overclaims verification or misses intent.</p></div>
+          <div class="card"><h3><code>uvvr-calibrate</code></h3><p>Design and assess known-good/bad/adversarial grader tests.</p></div>
+          <div class="card"><h3><code>uvvr-ledger</code></h3><p>Report verified, anchored, proxy, and human-only coverage.</p></div>
+        </div>
+        <p>Only the main <code>uvvr</code> skill belongs in the first implementation.</p>
+      </section>
+
+      <section id="learning">
+        <h2>4. Learning gates</h2>
+        <p class="lede">The build advances when the concept is understood and demonstrated, not because a date arrives.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Gate</th><th>You should be able to explain</th><th>Proof of readiness</th><th>Unlocks</th></tr></thead>
+            <tbody>
+              <tr><td class="gate">L0: Vocabulary</td><td>Verifier vs judge, ground truth vs anchor, proxy, false positive, Goodhart, holdout.</td><td>Classify ten criteria as V4–V0 and defend each choice.</td><td>Step 1</td></tr>
+              <tr><td class="gate">L1: Intent decomposition</td><td>Why “good answer” must be split into outcomes, quality, and forbidden behavior.</td><td>Write one complete outcome contract for a real AI system.</td><td>Step 2</td></tr>
+              <tr><td class="gate">L2: Task transformation</td><td>Known-answer, round-trip, metamorphic, differential, self-play, simulation.</td><td>Transform three hard-to-check criteria without overstating fidelity.</td><td>Step 3</td></tr>
+              <tr><td class="gate">L3: Grader validation</td><td>Why false positives are dangerous; how good/bad/adversarial self-tests work.</td><td>Build a calibration matrix and identify at least one exploit.</td><td>Steps 4–5</td></tr>
+              <tr><td class="gate">L4: Eval integrity</td><td>Holdout leakage, treatment contamination, correlated judges, repeated trials.</td><td>Review one benchmark for ways it could produce a flattering false result.</td><td>Step 5</td></tr>
+              <tr><td class="gate">L5: Product boundary</td><td>Why instruction behavior, plugin packaging, and hosted infrastructure are separate layers.</td><td>Explain which current user problem requires each proposed feature.</td><td>Steps 6–8</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Reference material: <a href="unverifiable-to-verifiable-rewards-research.md">full research report</a> and <a href="uvvr-eval-workflow-study-guide.html">concept/workflow study guide</a>.</p>
+      </section>
+
+      <section id="graph">
+        <h2>5. Dependency graph</h2>
+        <div class="graph" aria-label="Main dependency path">
+          <span class="node">1. Product contract</span><span class="arrow">→</span>
+          <span class="node">2. MVP skill</span><span class="arrow">→</span>
+          <span class="node">3. Dogfood</span><span class="arrow">→</span>
+          <span class="node">4. Harden schema</span><span class="arrow">→</span>
+          <span class="node">5. Benchmark</span><span class="arrow">→</span>
+          <span class="node">6. External pilot</span>
+        </div>
+        <div class="graph" aria-label="Optional post-pilot paths">
+          <span class="node">6. External pilot</span><span class="arrow">→</span>
+          <span class="node">7. Codex package</span><span class="parallel">∥</span>
+          <span class="node">8. Demand-led growth</span>
+        </div>
+        <p><span class="parallel">Parallel opportunity:</span> only after the external pilot validates the core job, Codex packaging and an independently justified companion skill may proceed concurrently. Packaging owns manifests and install docs; companion work owns its new skill directory and behavior tests.</p>
+      </section>
+
+      <section id="steps">
+        <h2>6. Construction steps</h2>
+        <p class="lede">Each step is scoped so a fresh coding agent can execute it without needing hidden history.</p>
+
+        <article class="step">
+          <div class="step-head"><span class="num">1</span><div><h3>Freeze the product contract</h3><div class="meta">Depends on: L0 · Mode: docs-only · Rollback: delete the draft</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>UVVR must turn fuzzy AI work into an honest eval design, not automatically declare subjective work verifiable.</div>
+            <div><strong>Tasks</strong>Fix the first wedge as <em>research agents</em>. Finalize vocabulary, V4–V0 ladder, output contract, non-goals, and four research-focused before/after examples: source QA, literature survey, decision brief, and deep-research report.</div>
+            <div><strong>Artifacts</strong><code>README.md</code>, <code>docs/product-contract.md</code>, four concise files under <code>examples/</code>. Keep the existing research report and study HTML at their current root paths for MVP.</div>
+            <div><strong>Verification</strong>A new reader can classify each example, identify its residual blind spot, and explain why no model judge is called ground truth.</div>
+            <div><strong>Exit criteria</strong>Research agents are the single declared wedge; all examples use the same output vocabulary; no runtime feature is required.</div>
+            <div><strong>Do not add</strong>Manifest, hooks, modes, CLI, MCP, database, or multi-host adapters.</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">2</span><div><h3>Create the instruction-only MVP skill</h3><div class="meta">Depends on: Step 1 + L1 · Mode: one skill · Rollback: revert one directory</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>Ponytail's true MVP was one skill plus examples. UVVR should first prove that a compact instruction artifact changes agent behavior.</div>
+            <div><strong>Tasks</strong>Write <code>skills/uvvr/SKILL.md</code> with triggers, interview rules, ladder, transformations, grader-validation requirements, output template, and explicit boundaries.</div>
+            <div><strong>Artifacts</strong>One skill file, ideally under 180 lines; no duplicated rule mirrors.</div>
+            <div><strong>Verification</strong>Run five hand-authored prompts. Confirm the skill asks only material questions and produces criterion maps with explicit V-levels and blind spots.</div>
+            <div><strong>Exit criteria</strong>Five complete outputs; zero cases where an LLM score is mislabeled as verified; instructions fit in one readable file.</div>
+            <div><strong>Rollback</strong>Return to the product contract and examples if the skill requires long explanations to remain coherent.</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">3</span><div><h3>Dogfood on real AI-system tasks</h3><div class="meta">Depends on: Step 2 + L2 · Mode: evidence collection · Rollback: none; preserve failures</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>Synthetic examples can make any prompt look good. The skill needs messy tasks with missing evidence, conflicting goals, and real constraints.</div>
+            <div><strong>Tasks</strong>Run six cases: three research-agent tasks, one impossible/V0-heavy research task, one customer-support out-of-domain contrast, and one safety-sensitive research task. Blind-review baseline and UVVR outputs.</div>
+            <div><strong>Artifacts</strong><code>dogfood/cases/</code>, sanitized inputs, UVVR outputs, <code>dogfood/review-checklist.md</code>, shuffled anonymous output IDs, reviewer notes, and failure taxonomy.</div>
+            <div><strong>Verification</strong>Reviewers score shuffled outputs without knowing baseline versus UVVR. Each failure is assigned to interview, decomposition, routing, transformation, grader design, or reporting—not patched with an unrelated rule.</div>
+            <div><strong>Exit criteria</strong>At least two recurring failure patterns discovered; at least one correct V0 preservation; review checklist and anonymization procedure are reproducible by another person.</div>
+            <div><strong>Rollback</strong>Never delete bad outputs. They become the regression corpus for later steps.</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">4</span><div><h3>Harden the workflow and artifact schema</h3><div class="meta">Depends on: Step 3 + L3 · Mode: skill refinement · Rollback: version skill revisions</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>Only repeated dogfood failures justify new rules. The output should become stable enough to compare across runs and systems.</div>
+            <div><strong>Tasks</strong>Revise the skill, define a minimal JSON/YAML criterion schema, add release-gate semantics, confidence, false-positive tolerance, provenance, and unresolved-risk fields.</div>
+            <div><strong>Artifacts</strong>Skill v2, <code>schemas/eval-contract.schema.json</code> only if needed, regression examples, changelog explaining every new rule.</div>
+            <div><strong>Verification</strong>Old failure cases now pass without regressing successful cases. Validate schema with the platform standard library where possible.</div>
+            <div><strong>Exit criteria</strong>Stable output contract across ten cases; every field has a consumer; no speculative configuration.</div>
+            <div><strong>Rollback</strong>Remove fields that do not change a decision, grader, or report.</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">5</span><div><h3>Build the benchmark and grader self-tests</h3><div class="meta">Depends on: Step 4 + L3/L4 · Mode: executable evidence · Rollback: preserve raw workspaces</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>The benchmark must be able to disprove UVVR's value. Compare the same agent with and without the skill on real eval-design tasks.</div>
+            <div><strong>Tasks</strong>Create treatment/control arms, frozen task corpus, deterministic checks for structure and honesty, calibrated model judge only for residual quality, repeated trials, offline rescoring, and explicit evaluator trust boundaries.</div>
+            <div><strong>Artifacts</strong><code>benchmarks/</code>, task definitions, good/bad references, self-tests, preserved run outputs, published limitations.</div>
+            <div><strong>Verification</strong>Good reference passes; plausible bad reference fails; judge ranks complete/honest contracts above flattering but invalid ones; treatment does not leak into control. Evaluated runs cannot read hidden references/holdouts or write graders, logs, or benchmark assets.</div>
+            <div><strong>Exit criteria</strong>Self-tests pass before model spend; benchmark reports variance and negative results; verified metrics remain separate from judge scores.</div>
+            <div><strong>Rollback</strong>Rescore preserved artifacts after grader changes; do not regenerate expensive runs unless behavior changes.</div>
+          </div>
+          <h4>Benchmark integrity invariants</h4>
+          <ul>
+            <li>Control prompt text is frozen, reviewed once, and contains no UVVR vocabulary.</li>
+            <li>Treatment and control run in fresh isolated directories with identical tools and permissions.</li>
+            <li>Hidden references and holdouts are outside evaluated agents' readable paths.</li>
+            <li>Graders, benchmark assets, reward calculations, and run logs are read-only to evaluated agents.</li>
+            <li>Deterministic checks run before any semantic judge.</li>
+            <li>The judge model family differs from the evaluated model family when practical; disagreements remain visible.</li>
+            <li>Generated executable grader code is sandboxed or excluded from MVP.</li>
+          </ul>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">6</span><div><h3>Run an external instruction-only pilot</h3><div class="meta">Depends on: Step 5 + L5 · Mode: external learning · Rollback: keep skill private</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>The first outside signal must arrive before companion skills or portability work. Pilot users can copy the one skill directory manually.</div>
+            <div><strong>Tasks</strong>Recruit two or three users working on research-agent evals. Give them the skill and study guide, not benchmark answers. Compare their manual and UVVR-assisted designs.</div>
+            <div><strong>Artifacts</strong>Pilot protocol, anonymized tasks, blind review scores, interviews, disagreements, and a decision record on whether the core job is valuable.</div>
+            <div><strong>Verification</strong>Use held-out tasks absent from examples and benchmark development. External reviewers can reproduce the verification ledger and identify its unresolved remainder.</div>
+            <div><strong>Exit criteria</strong>At least two users complete the workflow; independent review finds a material improvement or the project records a falsifying result.</div>
+            <div><strong>Rollback</strong>If the workflow does not help, revise or stop before creating plugin surface area.</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">7</span><div><h3>Package the externally validated skill for Codex</h3><div class="meta">Depends on: Step 6 · Mode: packaging · Parallel with optional Step 8</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>Packaging begins only after instruction behavior and external value are stable. Codex can load skills directly; UVVR does not need always-on context.</div>
+            <div><strong>Tasks</strong>Add the minimal <code>.codex-plugin/plugin.json</code>, metadata, license, install instructions, and plugin validation tests.</div>
+            <div><strong>Artifacts</strong>Codex manifest pointing to <code>./skills/</code>; no hooks unless a demonstrated failure requires them.</div>
+            <div><strong>Verification</strong>Install from a clean checkout, discover and invoke the skill, uninstall cleanly, and confirm no filesystem state is left behind.</div>
+            <div><strong>Exit criteria</strong>One-command install works; packaged behavior matches pilot and benchmark behavior.</div>
+            <div><strong>Rollback</strong>Users can continue copying the single skill directory manually.</div>
+          </div>
+        </article>
+
+        <article class="step">
+          <div class="step-head"><span class="num">8</span><div><h3>Add only pilot-proven companions and portability</h3><div class="meta">Depends on: Step 6; packaging lane may run in parallel · Mode: optional growth</div></div></div>
+          <div class="step-grid">
+            <div><strong>Context</strong>Separate operations and new hosts exist only if pilot sessions reveal distinct repeated jobs or installation demand.</div>
+            <div><strong>Tasks</strong>First candidate is <code>uvvr-audit</code>, but build it only if multiple pilot sessions require auditing existing evals. Add another host only when a pilot user requests it.</div>
+            <div><strong>Artifacts</strong>One small skill per proven job, behavior tests, and a decision record for every adapter or runtime feature.</div>
+            <div><strong>Verification</strong>Each companion has distinct triggers and outputs, reduces core-skill complexity, and does not mutate files unless requested.</div>
+            <div><strong>Exit criteria</strong>Every addition maps to repeated external usage; otherwise this step is explicitly skipped.</div>
+            <div><strong>Rollback</strong>Remove weak companions and remain Codex-only.</div>
+          </div>
+        </article>
+      </section>
+
+      <section id="benchmark">
+        <h2>7. Benchmark strategy</h2>
+        <p>The benchmark's unit is not prose quality. It is whether the skill produces a more complete, honest, and operationally useful eval design.</p>
+        <h3>Arms</h3>
+        <ul><li>Baseline agent with no UVVR guidance.</li><li>Short generic prompt: “make this task verifiable.”</li><li>UVVR skill.</li><li>Optional expert-authored reference, excluded from the model comparison.</li></ul>
+        <h3>Task families</h3>
+        <ul><li>Source-grounded question answering.</li><li>Literature survey.</li><li>Comparative decision brief.</li><li>Long-form deep-research report.</li><li>Impossible or heavily V0 research request.</li><li>One customer-support out-of-domain contrast.</li><li>One safety-sensitive research task with non-negotiable gates.</li></ul>
+        <h3>Metrics</h3>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Metric</th><th>Type</th><th>What it prevents</th></tr></thead>
+            <tbody>
+              <tr><td>All criteria assigned a V-level</td><td>Deterministic</td><td>Unclassified or silently subjective requirements.</td></tr>
+              <tr><td>Blind spot named for V0–V2 criteria</td><td>Deterministic</td><td>Overclaiming certainty.</td></tr>
+              <tr><td>Hard failures encoded as gates</td><td>Deterministic/reference</td><td>Averaging away safety or permission failures.</td></tr>
+              <tr><td>False-positive calibration designed</td><td>Structured</td><td>Trusting an untested grader.</td></tr>
+              <tr><td>Original-task holdout retained</td><td>Deterministic</td><td>Proxy-task transfer claims without evidence.</td></tr>
+              <tr><td>Operational completeness</td><td>Calibrated judge/expert</td><td>Beautiful framework with no runnable eval cases.</td></tr>
+              <tr><td>Intent fidelity</td><td>Expert/human</td><td>Optimizing checkability while losing the user's goal.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout red"><strong>Benchmark invariant:</strong> a shorter or more “verifiable-looking” output cannot win if it omits the intended outcome, treats a judge as an oracle, or fails to include a grader-validation path.</div>
+      </section>
+
+      <section id="structure">
+        <h2>8. Repository evolution</h2>
+        <h3>After Step 1</h3>
+        <pre><code>README.md
+LICENSE
+docs/product-contract.md
+unverifiable-to-verifiable-rewards-research.md
+uvvr-eval-workflow-study-guide.html
+examples/
+  source-qa.md
+  literature-survey.md
+  decision-brief.md
+  deep-research-report.md</code></pre>
+        <h3>After Step 2</h3>
+        <pre><code>skills/
+  uvvr/
+    SKILL.md</code></pre>
+        <h3>After Steps 4–5</h3>
+        <pre><code>schemas/                 # only if machine validation earns its place
+dogfood/
+benchmarks/
+  tasks/
+  references/
+  graders/
+  results/
+tests/</code></pre>
+        <h3>After Steps 7–8, only if validated</h3>
+        <pre><code>.codex-plugin/
+  plugin.json
+skills/
+  uvvr/
+  uvvr-audit/            # only if the pilot proves this separate job</code></pre>
+        <p>Hooks, commands, MCP, runtime configuration, and additional host adapters are intentionally absent from the planned default tree.</p>
+      </section>
+
+      <section id="antipatterns">
+        <h2>9. Anti-pattern catalog</h2>
+        <details open><summary>Building a universal eval platform before one skill works</summary><div><p>The first proof is behavioral: does a compact skill reliably improve eval design? Infrastructure cannot answer that.</p></div></details>
+        <details><summary>One aggregate “verifiability score”</summary><div><p>Keep verified, anchored, proxy, and human-only coverage separate. Aggregation hides which guarantees are real.</p></div></details>
+        <details><summary>Calling LLM-as-judge verification</summary><div><p>It is a structured semantic proxy. Require calibration, evidence, independent holdout, and an explicit unverifiable option.</p></div></details>
+        <details><summary>Generating only synthetic happy-path tasks</summary><div><p>Real production work contains conflicting criteria, missing evidence, impossible requests, policy constraints, and delayed outcomes.</p></div></details>
+        <details><summary>Optimizing directly on public examples</summary><div><p>Examples teach the workflow; hidden benchmark cases measure generalization. Do not use the same artifacts for both.</p></div></details>
+        <details><summary>Self-grading with the same model and prompt family</summary><div><p>Correlated errors produce false confidence. Use deterministic checks first, cross-family judges, and human calibration.</p></div></details>
+        <details><summary>Adding hooks because Ponytail has hooks</summary><div><p>Ponytail is an always-on mode. UVVR is an invoked construction workflow. Packaging should follow behavior.</p></div></details>
+        <details><summary>Duplicating the rule text across hosts too early</summary><div><p>Mirrors create drift tests and maintenance. Keep one source of truth until portability is demanded.</p></div></details>
+      </section>
+
+      <section id="risks">
+        <h2>10. Risks and mitigations</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Risk</th><th>Early signal</th><th>Mitigation</th></tr></thead>
+            <tbody>
+              <tr><td>The skill produces impressive but generic frameworks.</td><td>Outputs look similar across unrelated tasks.</td><td>Require real examples, available evidence, and criterion-specific graders.</td></tr>
+              <tr><td>Users confuse V1 with V4.</td><td>“Verified” appears beside LLM scores.</td><td>Enforce vocabulary and deterministic report checks.</td></tr>
+              <tr><td>The interview is exhausting.</td><td>Too many questions before any useful output.</td><td>Ask only questions that change routing, gates, or evidence.</td></tr>
+              <tr><td>The ladder optimizes checkability over value.</td><td>Proxy tasks improve while original tasks do not.</td><td>Require original-task holdout and residual human/outcome review.</td></tr>
+              <tr><td>The benchmark flatters the skill.</td><td>Only UVVR-authored cases and judges are used.</td><td>Adversarial reference cases, control prompts, independent reviewers.</td></tr>
+              <tr><td>Skill instructions grow without bound.</td><td>Every failure adds another special rule.</td><td>Fix shared root causes, move examples/references out, cap core length.</td></tr>
+              <tr><td>Packaging work dominates product learning.</td><td>More adapter commits than dogfood cases.</td><td>Freeze portability until external demand exists.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="mutation">
+        <h2>11. Plan mutation protocol</h2>
+        <p>This roadmap should change when evidence changes. Record every mutation in a short decision log.</p>
+        <ul>
+          <li><strong>Split a step</strong> when it has two independently verifiable outcomes or conflicting file ownership.</li>
+          <li><strong>Insert a step</strong> only when a newly discovered dependency blocks the next exit criterion.</li>
+          <li><strong>Skip a step</strong> when its user need disappears; record the evidence, not “out of time.”</li>
+          <li><strong>Reorder steps</strong> only if all dependency edges remain satisfied.</li>
+          <li><strong>Abandon a feature</strong> when dogfood or the benchmark shows no value; preserve the result as evidence.</li>
+          <li><strong>Reject scope expansion</strong> when it solves a future distribution problem rather than the current skill behavior.</li>
+        </ul>
+        <pre><code>decision_id: UVVR-PLAN-003
+change: Split benchmark design from Codex packaging
+evidence: Behavior still changed across dogfood cases
+dependencies_affected: packaging now waits for benchmark stability
+rollback: return to instruction-only skill
+approved_by: project owner
+date: YYYY-MM-DD</code></pre>
+      </section>
+
+      <section id="decision">
+        <h2>12. The first decision—not the first code</h2>
+        <p>Before Step 1, choose one initial wedge. The skill can generalize later, but examples and benchmarks need a concrete starting domain.</p>
+        <div class="grid">
+          <div class="card"><h3>Research agents</h3><p>Richest demonstration of claims, evidence, coverage, synthesis, source quality, and unverifiable judgment.</p></div>
+          <div class="card"><h3>Customer support</h3><p>Strongest demonstration of external state, permissions, safety gates, policy, and communication quality.</p></div>
+          <div class="card"><h3>Coding agents</h3><p>Most naturally verifiable, but may underrepresent the difficult open-ended problem UVVR exists to solve.</p></div>
+          <div class="card"><h3>General assistants</h3><p>Broadest market, but too diffuse for a clean first benchmark.</p></div>
+        </div>
+        <div class="callout blue"><strong>Decision:</strong> start with research agents. Use customer support only as the single out-of-domain contrast during dogfood. This preserves one coherent MVP while checking that the ladder is not merely a research-specific rubric.</div>
+        <p>Once this choice is understood and accepted, Step 1 can begin. Until then, the correct output is this plan—not a scaffold.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="page">UVVR skill work roadmap · separate from the concept study guide · research cutoff 28 August 2026</footer>
+</body>
+</html>

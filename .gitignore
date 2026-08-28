@@ -1,0 +1,8 @@
+.DS_Store
+.env
+.omx/
+__pycache__/
+*.pyc
+*.log
+runs/
+tmp/
