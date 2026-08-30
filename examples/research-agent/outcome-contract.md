@@ -45,6 +45,9 @@ The report should help a decision-maker act using claims that are traceable to c
 
 ## Criterion map
 
+V1 criteria below use instance checklists (per Scale RaR / UVVR best practices) rather than
+holistic Likert scoring. Each checklist item is judged independently as pass/fail/unknown.
+
 | Criterion | Level | Verifier | Role | Evidence consumed | What a pass establishes | Blind spot |
 |---|---|---|---:|---|---|---|
 | Output and citation syntax parse | V4 | Deterministic parser | block | Final report | Required fields and citation references are well-formed | Says nothing about truth |
@@ -52,8 +55,8 @@ The report should help a decision-maker act using claims that are traceable to c
 | Declared direct quotations match sources | V4 | Exact or validated-ellipsis span check | block | Direct quote and source text | Text presented as a quotation is faithful to the source | A real quote can be used misleadingly; paraphrases use claim-support evaluation instead |
 | Quantities are transcribed and calculated correctly | V4 | Parser and arithmetic checks | block | Report values and cited source values | Reported quantities match evidence and derived arithmetic is correct | Source quantities may themselves be wrong |
 | Material claims are supported | V2 | Claim decomposition plus evidence assessment | block | Atomic claims and cited passages | Supplied evidence supports each material claim's meaning | Decomposition and entailment assessment can fail |
-| Source quality fits the claim | V1 | Prompt-specific rubric | score | Source metadata, claim type, and context | Sources are appropriate for the kind of claim being made | Authority and independence are context-dependent |
-| Material evidence and counterevidence are covered | V1 | Coverage rubric plus landmark-source audit | score | Report, discovered sources, and audit source set | The report addresses major known evidence on both sides | Unknown or inaccessible evidence can remain missing |
+| Source quality fits the claim | V1 | Instance checklist: (1) source type fits claim type, (2) source is primary when needed, (3) publication is credible for the domain, (4) source date fits recency requirement | score | Source metadata, claim type, and context | Sources meet quality criteria for the kind of claim being made | Authority and independence are context-dependent |
+| Material evidence and counterevidence are covered | V1 | Instance checklist: (1) major supporting evidence cited, (2) known counterevidence addressed, (3) uncertainty explicit, (4) no decisive evidence omitted | score | Report, discovered sources, and audit source set | The report addresses major known evidence on both sides | Unknown or inaccessible evidence can remain missing |
 | Recommendation follows from the evidence | V1 | Calibrated semantic judge and expert sample | score | Report, evidence map, and decision context | The stated recommendation is coherent with cited evidence and uncertainty | Reasonable people can weigh tradeoffs differently |
 | Tool use respects privacy and policy | V3 | Trace and environment-policy checks | block | Tool calls, inputs, outputs, and state changes | No recorded forbidden action or data disclosure occurred | Unlogged external side effects remain unseen |
 | Report helps the user make the decision | V0 | Blinded user or expert evaluation | audit | Report and decision task | Intended users find the report useful for the stated decision | Preference is user-specific and does not prove outcome quality |

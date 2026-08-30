@@ -56,7 +56,7 @@ transfer_check: how improvement will be checked on the original task
 
 Useful transformations include a known answer, reference-conditioned replication, executable end state, temporal snapshots, round trip, metamorphic relation, differential comparison, simulation, provenance check, human review, or delayed outcome. A perfect proxy label does not prove original-task quality.
 
-For subjective rewards, first render or otherwise expose an inspectable outcome and keep executable eligibility checks separate from quality. When absolute rubric scores are compressed or arbitrary, prefer relative comparison against several human-curated references. Record who selected the pool, its inclusion rule and coverage, the sampled references, and the comparison judge. This remains a V1 judgment grounded by V2 anchors—not ground truth.
+For subjective rewards, first render or otherwise expose an inspectable outcome and keep executable eligibility checks separate from quality. Default to pairwise comparison against a curated reference set (3–7 diverse anchors) rather than absolute Likert scoring. Record who selected the pool, its inclusion rule and coverage, which references were sampled for each judgment, and the comparison judge. Pairwise preference is still a V1 judgment grounded by V2 anchors—not ground truth. Test adversarial cases: length inflation, self-justification against the rubric, and reference pool overfitting.
 
 Before combining reward components, remove signals that duplicate one another or have already saturated. Keep reward changes separate from prompt, tool, retry, and action-space changes so improvement is attributed correctly.
 
@@ -70,6 +70,16 @@ Before combining reward components, remove signals that duplicate one another or
 | V1 | Structured semantic proxy: rubric, learned verifier, or model judge |
 
 V4–V1 are usable verifier classes. Put preferences, contested values, and delayed outcomes with no current verifier in the **unverifiable remainder (V0)** instead of inventing a score.
+
+**Push verification left.** For every criterion, choose the strongest feasible verifier:
+
+- Extract hard format, length, section, or forbidden-action constraints as V4 checks before using a judge.
+- Use grounded state, trace, or transaction evidence (V3) instead of asking a judge to infer what happened.
+- Build or find reference anchors (V2) for factual claims before scoring them with an unanchored rubric (V1).
+- For V1 criteria, prefer instance-specific yes/no checklists (7–20 items) over single holistic Likert scores.
+- For subjective quality (writing, design), default to pairwise comparison against curated references instead of absolute scoring.
+
+If you cannot write or specify a grader, do not claim the task is ready for policy training. See `references/verifier-ranking.md` for detailed patterns.
 
 Keep level separate from role:
 

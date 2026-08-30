@@ -21,8 +21,13 @@ transfer_check: UVVR_ADAPT
 
 ## Criterion map
 
-UVVR_ADAPT: give every atomic criterion exactly one level and one role. Put
-supporting anchors in Evidence instead of inventing composite levels.
+UVVR_ADAPT: give every atomic criterion exactly one level and one role. Push
+verification left: use V4 deterministic over V3 state over V2 reference over V1 judge.
+Extract hard format/length/structure constraints as V4 before using a judge.
+For V1 criteria, prefer instance-specific yes/no checklists (7–20 items) over single
+holistic Likert scores. For subjective quality, default to pairwise comparison against
+curated references (3–7 anchors). Put supporting anchors in Evidence instead of
+inventing composite levels.
 
 | Criterion | Level | Evidence | Verifier / what pass establishes | Role | Blind spot |
 |---|---|---|---|---|---|
